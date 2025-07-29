@@ -3,223 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aman Jaiswal - Student Portfolio</title>
+    <title>Aman Jaiswal - AI/ML Engineer</title>
     
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Fira Code & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom Styles -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            background-color: #0d1117;
+            color: #c9d1d9;
+            overflow-x: hidden;
+        }
+        body.modal-open {
+            overflow: hidden;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .font-fira {
+            font-family: 'Fira Code', monospace;
+        }
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.5em;
+            background-color: #58a6ff;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { background-color: transparent }
+            50% { background-color: #58a6ff; }
+        }
+        .glass-effect {
+            background: rgba(13, 17, 23, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
         }
         .section-title {
-            @apply text-3xl font-bold text-slate-800 mb-8 text-center;
+            @apply text-3xl md:text-4xl font-bold text-gray-100 mb-12 text-center font-fira;
+        }
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        .scanline-effect::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(13, 17, 23, 0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 2;
+            pointer-events: none;
+            animation: scanline 10s linear infinite;
+        }
+        @keyframes scanline {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            width: 90%;
+            max-width: 60rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 0.75rem;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
         }
     </style>
 </head>
-<body class="text-slate-700">
+<body class="text-lg">
 
-    <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold text-slate-800">Sakshi Kothari</a>
-            <div class="hidden md:flex space-x-8 items-center">
-                <a href="#about" class="hover:text-indigo-600 transition-colors">About</a>
-                <a href="#projects" class="hover:text-indigo-600 transition-colors">Projects</a>
-                <a href="#experience" class="hover:text-indigo-600 transition-colors">Experience</a>
-                <a href="#contact" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">Contact</a>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 glass-effect">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="#" class="text-xl font-bold text-gray-100 font-fira">Aman Jaiswal</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="hover:text-blue-400 transition-colors duration-300">About</a>
+                    <a href="#projects" class="hover:text-blue-400 transition-colors duration-300">Projects</a>
+                    <a href="#skills" class="hover:text-blue-400 transition-colors duration-300">Skills</a>
+                    <a href="Aman-Jaiswal-CV.pdf" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold">Download CV</a>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </nav>
+            <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+                <a href="#about" class="block py-2 hover:text-blue-400">About</a>
+                <a href="#projects" class="block py-2 hover:text-blue-400">Projects</a>
+                <a href="#skills" class="block py-2 hover:text-blue-400">Skills</a>
+                <a href="Aman-Jaiswal-CV.pdf" target="_blank" class="block mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center">Download CV</a>
             </div>
-            <button id="mobile-menu-button" class="md:hidden">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-        </nav>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-            <a href="#about" class="block py-2 hover:text-indigo-600">About</a>
-            <a href="#projects" class="block py-2 hover:text-indigo-600">Projects</a>
-            <a href="#experience" class="block py-2 hover:text-indigo-600">Experience</a>
-            <a href="#contact" class="block mt-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-center">Contact</a>
+        </header>
+
+        <main class="container mx-auto px-6">
+
+            <!-- Hero Section -->
+            <section id="home" class="min-h-screen flex items-center relative">
+                <div class="scanline-effect"></div>
+                <div class="w-full">
+                    <div class="font-fira text-left max-w-4xl mx-auto">
+                        <div class="text-green-400 mb-2">&gt; Aman Jaiswal</div>
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-100 mb-4">
+                            <span id="typewriter"></span><span class="terminal-cursor"></span>
+                        </h1>
+                        <div id="links-container" class="opacity-0 transition-opacity duration-1000 mt-8 flex items-center space-x-6">
+                            <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors" title="LinkedIn"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                            <a href="https://github.com/Aman-2107" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors" title="GitHub"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                            <a href="#projects" class="bg-transparent border border-blue-500 text-blue-400 px-6 py-3 rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300 font-semibold">View My Work</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Me Section -->
+            <section id="about" class="py-20 md:py-32">
+                 <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-12 items-center">
+                    <div class="md:col-span-2 space-y-4">
+                        <h2 class="text-3xl font-bold text-gray-100">About Me</h2>
+                        <p class="text-gray-300">A graduate AI/ML Engineer with a Distinction from Queen Mary University of London, specialising in Natural Language Processing. I'm passionate about designing and deploying end-to-end machine learning solutions, with a portfolio that includes high-impact applications in legal-tech and mental health.</p>
+                        <p class="text-gray-400">I am actively seeking a graduate software engineering role in the UK where I can apply my skills in AI and machine learning to solve complex problems and contribute to innovative projects.</p>
+                    </div>
+                    <div class="text-center"><img src="https://placehold.co/200x200/161b22/c9d1d9?text=Aman" alt="Aman Jaiswal" class="w-48 h-48 rounded-full mx-auto shadow-lg border-4 border-gray-700"></div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-1 gap-16">
+                    <!-- Project 1 -->
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1"><img src="https://placehold.co/800x600/3b82f6/ffffff?text=Legal-Tech+AI" alt="Legal Document Analyzer" class="w-full project-image transition-transform duration-300 rounded-md"></div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-blue-400">AI-Powered Legal Document Analyzer &amp; Contract Summarizer</h3>
+                            <p class="mb-4 text-gray-300">Engineered an AI-powered system to analyze legal documents, designed to extract and categorize over 15 distinct clause types. Optimized AI models for legal-specific text by fine-tuning transformer architectures (Legal-BERT, GPT), targeting a 20% improvement over baseline model performance.</p>
+                            <div class="flex flex-wrap gap-2 mb-6"><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Flask</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">React</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PyTorch</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Hugging Face</span></div>
+                            <button class="view-details-btn bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold" data-title="AI-Powered Legal Document Analyzer & Contract Summarizer" data-description="Engineered an Al-powered system to analyze legal documents, designed to extract and categorize over 15 distinct clause types (e.g., termination, liability). Designed and implemented a risk assessment model to score and highlight ambiguous language, improving the clarity of legal reviews. Optimized Al models for legal-specific text by fine-tuning transformer architectures (Legal-BERT, GPT), targeting a 20% improvement over baseline model performance. Constructed the full-stack system using Python and Flask for the backend and React for the UI, leveraging PyTorch and Hugging Face Transformers." data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-tech="Python,Flask,React,PyTorch,Hugging Face" data-repo-link="#">View Details</button>
+                        </div>
+                    </div>
+                    <!-- Project 2 -->
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="rounded-lg overflow-hidden shadow-2xl md:order-2 glass-effect p-1"><img src="https://placehold.co/800x600/10b981/ffffff?text=CALMA-AI" alt="CALMA-AI" class="w-full project-image transition-transform duration-300 rounded-md"></div>
+                        <div class="md:order-1">
+                            <h3 class="text-2xl font-bold mb-3 text-green-400">CALMA-AI: Emotional Companion</h3>
+                            <p class="mb-4 text-gray-300">Developed a complete, offline-first AI emotional support system. Architected a multi-modal interface to detect user emotions from text and voice, achieving real-time responses (<1s latency) while ensuring 100% on-device processing for complete user privacy.</p>
+                            <div class="flex flex-wrap gap-2 mb-6"><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RoBERTa</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Whisper</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LLAMA 3.2</span></div>
+                            <button class="view-details-btn bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold" data-title="CALMA-AI: Emotional Companion for Mental Health" data-description="Developed a complete, Al-powered offline emotional support system utilizing Python, RoBERTa, Whisper, and LLAMA 3.2. Architected a multi-modal interface to detect user emotions from both text and voice, achieving real-time response generation (<1-second latency). Implemented key features including a structured mood tracker and visual dashboards, ensuring 100% on-device processing for complete user privacy." data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-tech="Python,RoBERTa,Whisper,LLAMA 3.2" data-repo-link="#">View Details</button>
+                        </div>
+                    </div>
+                    <!-- Project 3 -->
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1"><img src="/assets/legal-search-engine-thumb.png?text=Legal+Search" alt="Legal Search Engine" class="w-full project-image transition-transform duration-300 rounded-md"></div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-amber-400">Legal Search Engine with BM25 Ranking</h3>
+                            <p class="mb-4 text-gray-300">A full-featured desktop application built with Python and Tkinter to search and retrieve documents from the 100k+ document Lex-GLUE benchmark. It implements the BM25Okapi algorithm for efficient, relevance-based ranking, delivering search results in under 500ms.</p>
+                            <div class="flex flex-wrap gap-2 mb-6"><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Tkinter</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">BM25</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Threading</span></div>
+                            <button class="view-details-btn bg-amber-600 text-white px-5 py-2 rounded-lg hover:bg-amber-700 transition-colors font-semibold" data-title="Legal Search Engine with BM25 Ranking" data-description="This project is a full-featured desktop application built with Python and Tkinter that provides an intuitive graphical user interface for searching through complex legal documents. It utilizes the robust BM25Okapi algorithm for efficient, relevance-based ranking and is designed to work with subsets of the Lex-GLUE benchmark dataset. Key features include a modern GUI, dynamic dataset loading from the Hugging Face Hub, query term highlighting, and a responsive, non-blocking UI achieved through multithreading to handle intensive search operations without freezing the interface." data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-tech="Python,Tkinter,BM25,Threading" data-repo-link="#">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="py-20 md:py-32">
+                <h2 class="section-title">Technical Skills</h2>
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div><h3 class="text-xl font-bold text-blue-400 mb-4">Programming & Databases</h3><ul class="space-y-2 text-gray-300"><li>Python</li><li>SQL</li><li>Java</li><li>Dart</li><li>C++</li><li>MySQL</li><li>Firebase</li></ul></div>
+                    <div><h3 class="text-xl font-bold text-green-400 mb-4">AI & Machine Learning</h3><ul class="space-y-2 text-gray-300"><li>PyTorch</li><li>Hugging Face Transformers</li><li>Scikit-learn</li><li>Pandas, NumPy, Matplotlib</li><li>NLTK</li><li>XGBoost</li><li>LSTMs</li></ul></div>
+                    <div><h3 class="text-xl font-bold text-amber-400 mb-4">Developer Tools & Platforms</h3><ul class="space-y-2 text-gray-300"><li>Git</li><li>Agile Methodologies</li><li>Flask</li><li>React</li><li>Bootstrap</li><li>Flutter</li></ul></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-black bg-opacity-20 border-t border-gray-800">
+            <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+                <div class="flex justify-center space-x-6 mb-4">
+                    <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" class="hover:text-blue-400 transition-colors">LinkedIn</a>
+                    <a href="https://github.com/Aman-2107" target="_blank" class="hover:text-blue-400 transition-colors">GitHub</a>
+                    <a href="Aman-Jaiswal-CV.pdf" target="_blank" class="hover:text-blue-400 transition-colors">Download CV</a>
+                </div>
+                <p>&copy; 2025 Aman Jaiswal. Built with passion and code.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content glass-effect p-8 relative">
+            <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-4xl font-light">&times;</button>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div id="modal-media-container" class="rounded-lg w-full bg-black">
+                    <video id="modal-video" src="" class="rounded-lg w-full" autoplay loop muted playsinline></video>
+                </div>
+                <div>
+                    <h3 id="modal-title" class="text-2xl font-bold mb-3"></h3>
+                    <p id="modal-description" class="mb-4 text-gray-300"></p>
+                    <div id="modal-tech-stack" class="flex flex-wrap gap-2 mb-6"></div>
+                    <div class="flex items-center space-x-4 mt-6">
+                        <a id="modal-repo-link" href="#" target="_blank" class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-600 transition-colors font-semibold">GitHub Repo</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
-
-    <main class="container mx-auto px-6 py-12">
-
-        <!-- Hero Section -->
-        <section id="home" class="text-center py-20">
-            <img src="https://placehold.co/128x128/E2E8F0/475569?text=AJ" alt="Your Profile Picture" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-white shadow-lg">
-            <h1 class="text-4xl md:text-6xl font-bold text-slate-800 mb-4">Hi, I'm Aman Jaiswal</h1>
-            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8">
-                I'm a passionate student studying [Your Major/Field]. I love building creative and functional web applications.
-            </p>
-            <a href="#projects" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-transform hover:scale-105 inline-block">View My Work</a>
-        </section>
-
-        <!-- About Me Section -->
-        <section id="about" class="py-20">
-            <h2 class="section-title">About Me</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-4">
-                    <p>
-                        Hello! I'm Aman, a driven and curious student at [Your University]. My journey into technology started with [mention a starting point, e.g., a simple HTML page, a Python script, a design course]. Since then, I've been captivated by [mention your passion, e.g., solving complex problems, creating beautiful user interfaces, working with data].
-                    </p>
-                    <p>
-                        I'm currently focusing on expanding my skills in [mention a key area, e.g., full-stack development, UI/UX design, machine learning]. I'm always eager to learn new technologies and collaborate on exciting projects.
-                    </p>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-bold text-slate-800 mb-4">My Skills</h3>
-                    <div class="flex flex-wrap gap-3">
-                        <!-- Add your skills here -->
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">HTML & CSS</span>
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">JavaScript</span>
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">React</span>
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">Node.js</span>
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">Python</span>
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">Figma</span>
-                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-medium">Git & GitHub</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="py-20 bg-white rounded-2xl -mx-6 px-6">
-            <h2 class="section-title">My Projects</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Project Card 1 -->
-                <div class="bg-slate-50 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <img src="https://placehold.co/600x400/93C5FD/1E293B?text=Project+1" alt="Project 1 Screenshot" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 text-slate-800">Project Title 1</h3>
-                        <p class="mb-4">A brief description of your project. Explain the problem it solves and the technologies you used.</p>
-                        <div class="flex justify-between items-center">
-                            <a href="#" class="text-indigo-600 font-semibold hover:underline">Live Demo</a>
-                            <a href="#" class="text-slate-500 hover:text-slate-800">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project Card 2 -->
-                <div class="bg-slate-50 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <img src="https://placehold.co/600x400/A5B4FC/1E293B?text=Project+2" alt="Project 2 Screenshot" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 text-slate-800">Project Title 2</h3>
-                        <p class="mb-4">A brief description of your project. Explain the problem it solves and the technologies you used.</p>
-                        <div class="flex justify-between items-center">
-                            <a href="#" class="text-indigo-600 font-semibold hover:underline">Live Demo</a>
-                            <a href="#" class="text-slate-500 hover:text-slate-800">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project Card 3 -->
-                <div class="bg-slate-50 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <img src="https://placehold.co/600x400/C4B5FD/1E293B?text=Project+3" alt="Project 3 Screenshot" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 text-slate-800">Project Title 3</h3>
-                        <p class="mb-4">A brief description of your project. Explain the problem it solves and the technologies you used.</p>
-                        <div class="flex justify-between items-center">
-                            <a href="#" class="text-indigo-600 font-semibold hover:underline">Live Demo</a>
-                            <a href="#" class="text-slate-500 hover:text-slate-800">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Experience & Education Section -->
-        <section id="experience" class="py-20">
-            <h2 class="section-title">Experience & Education</h2>
-            <div class="max-w-3xl mx-auto">
-                <div class="relative border-l-2 border-slate-200 pl-8 space-y-12">
-                    <!-- Education Item -->
-                    <div class="relative">
-                        <div class="absolute -left-10 bg-indigo-500 h-4 w-4 rounded-full border-4 border-white"></div>
-                        <p class="text-sm font-medium text-slate-500">[Year Started] - [Year Graduated/Present]</p>
-                        <h3 class="text-xl font-bold text-slate-800 mt-1">[Your Degree], [Your Major]</h3>
-                        <p class="text-slate-600">[Your University or College]</p>
-                    </div>
-                    <!-- Experience Item -->
-                    <div class="relative">
-                        <div class="absolute -left-10 bg-indigo-500 h-4 w-4 rounded-full border-4 border-white"></div>
-                        <p class="text-sm font-medium text-slate-500">[Date Range, e.g., Summer 2024]</p>
-                        <h3 class="text-xl font-bold text-slate-800 mt-1">[Your Job Title, e.g., Software Engineer Intern]</h3>
-                        <p class="text-slate-600">[Company Name]</p>
-                        <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li>Briefly describe a key responsibility or accomplishment.</li>
-                            <li>Another point about what you did or learned.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-20 bg-white rounded-2xl -mx-6 px-6">
-            <h2 class="section-title">Get In Touch</h2>
-            <p class="text-center max-w-2xl mx-auto mb-10">
-                I'm currently looking for new opportunities and collaborations. Feel free to send me a message!
-            </p>
-            <form action="#" method="POST" class="max-w-xl mx-auto space-y-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Name</label>
-                    <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-                <div>
-                    <label for="message" class="block text-sm font-medium text-slate-700 mb-1">Message</label>
-                    <textarea id="message" name="message" rows="4" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">Send Message</button>
-            </form>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-slate-300">
-        <div class="container mx-auto px-6 py-8 text-center">
-            <div class="flex justify-center space-x-6 mb-4">
-                <!-- Replace # with your actual social media links -->
-                <a href="#" class="hover:text-white transition-colors">GitHub</a>
-                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
-                <a href="#" class="hover:text-white transition-colors">Twitter / X</a>
-            </div>
-            <p>&copy; 2024 Aman Jaiswal. All Rights Reserved.</p>
-        </div>
-    </footer>
+    </div>
 
     <script>
-        // JavaScript for mobile menu toggle
+        // --- Mobile Menu Toggle ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
 
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        // --- Typewriter Effect ---
+        const typewriterElement = document.getElementById('typewriter');
+        const linksContainer = document.getElementById('links-container');
+        const text = "AI/ML Engineer";
+        let index = 0;
+        function type() {
+            if (index < text.length) {
+                typewriterElement.textContent += text.charAt(index);
+                index++;
+                setTimeout(type, 100);
+            } else {
+                linksContainer.classList.remove('opacity-0');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => setTimeout(type, 500));
+
+        // --- Project Modal Logic ---
+        const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
+        const modal = document.getElementById('project-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalVideo = document.getElementById('modal-video');
+
+        viewDetailsButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const data = button.dataset;
+                document.getElementById('modal-title').textContent = data.title;
+                document.getElementById('modal-description').textContent = data.description;
+                modalVideo.src = data.video;
+                document.getElementById('modal-repo-link').href = data.repoLink;
+
+                const techStackContainer = document.getElementById('modal-tech-stack');
+                techStackContainer.innerHTML = '';
+                data.tech.split(',').forEach(tech => {
+                    const techTag = document.createElement('span');
+                    techTag.className = 'bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm';
+                    techTag.textContent = tech.trim();
+                    techStackContainer.appendChild(techTag);
+                });
+
+                modal.classList.add('active');
+                document.body.classList.add('modal-open');
+            });
         });
 
-        // Close mobile menu when a link is clicked
-        const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
-        for (let link of mobileMenuLinks) {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+            // Pause the video and clear the source when closing
+            modalVideo.pause();
+            modalVideo.src = "";
         }
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // --- Three.js Neural Network Background ---
+        let scene, camera, renderer, points, lines;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.z = 1000;
+            const particles = 500;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particles * 3);
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i] = Math.random() * 2000 - 1000;
+                positions[i + 1] = Math.random() * 2000 - 1000;
+                positions[i + 2] = Math.random() * 2000 - 1000;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ color: 0x444444, size: 2 });
+            points = new THREE.Points(geometry, material);
+            scene.add(points);
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = [];
+            for (let i = 0; i < particles; i++) {
+                for (let j = i + 1; j < particles; j++) {
+                    const dx = positions[i * 3] - positions[j * 3];
+                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+                    if (Math.sqrt(dx * dx + dy * dy + dz * dz) < 150) {
+                        linePositions.push(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+                        linePositions.push(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]);
+                    }
+                }
+            }
+            lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x2a2a2a, transparent: true, opacity: 0.5 });
+            lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        function onDocumentMouseMove(event) {
+            mouseX = event.clientX - windowHalfX;
+            mouseY = event.clientY - windowHalfY;
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+        function render() {
+            camera.position.x += (mouseX - camera.position.x) * .0005;
+            camera.position.y += (-mouseY - camera.position.y) * .0005;
+            camera.lookAt(scene.position);
+            const time = Date.now() * 0.00005;
+            points.rotation.x = time * 0.25;
+            points.rotation.y = time * 0.5;
+            lines.rotation.x = time * 0.25;
+            lines.rotation.y = time * 0.5;
+            renderer.render(scene, camera);
+        }
+        init();
+        animate();
     </script>
 
 </body>
