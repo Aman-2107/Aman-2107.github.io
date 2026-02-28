@@ -37,6 +37,10 @@
       overflow-x: hidden;
     }
 
+    body.modal-open {
+      overflow: hidden;
+    }
+
     /* Background canvas sits behind everything */
     #bg-canvas {
       position: fixed;
@@ -83,7 +87,7 @@
       border: 1px solid rgba(48,54,61,0.5);
     }
 
-    /* Modal styling */
+    /* Modal styling (premium animation) */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -99,6 +103,7 @@
     .modal-overlay.active {
       opacity: 1;
       pointer-events: auto;
+      backdrop-filter: blur(6px); /* subtle cinematic blur */
     }
     .modal-content {
       width: 92%;
@@ -106,13 +111,32 @@
       max-height: 90vh;
       overflow-y: auto;
       border-radius: 0.75rem;
-      transform: scale(0.98);
-      transition: transform 0.22s ease;
+      opacity: 0;
+      transform: translateY(20px) scale(0.97);
+      transition: all 0.28s cubic-bezier(.4,0,.2,1);
     }
-    .modal-overlay.active .modal-content { transform: scale(1); }
+    .modal-overlay.active .modal-content {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Loader default hidden */
+    #video-loader {
+      display: none;
+    }
 
     /* Accessibility / minor helpers */
     .sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    /* research media iframe styling */
+    .research-media {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(71, 85, 105, 0.15);
+      background: #07080a;
+    }
   </style>
 </head>
 
@@ -195,9 +219,10 @@
 
           <div class="flex justify-center">
             <div class="w-64 h-64 rounded-full overflow-hidden shadow-2xl glass-effect p-1">
-				<img src="/assets/myself.JPEG" alt="Portrait of Aman Jaiswal" class="w-full h-full object-cover rounded-full">
+              <img src="/assets/myself.JPEG" alt="Portrait of Aman Jaiswal" class="w-full h-full object-cover rounded-full">
             </div>
           </div>
+        </div>
       </section>
 
       <!-- Projects -->
@@ -284,8 +309,9 @@
           </div>
         </div>
       </section>
-	
+
       <div class="max-w-6xl mx-auto border-t border-gray-800 my-20"></div>
+
       <!-- Research -->
       <section id="research" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
         <h2 class="section-title">Research</h2>
@@ -364,8 +390,9 @@
     <div class="modal-content glass-effect p-8 relative" role="document">
       <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl" aria-label="Close modal">&times;</button>
       <div class="grid md:grid-cols-2 gap-8 items-center">
-        <div id="modal-media-container" class="rounded-lg w-full bg-black">
-          <iframe id="modal-video" class="rounded-lg w-full aspect-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen> </iframe>
+        <div id="modal-media-container" class="relative rounded-lg w-full bg-black flex items-center justify-center">
+          <div id="video-loader" class="absolute w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
+          <iframe id="modal-video" class="rounded-lg w-full aspect-video opacity-0 transition-opacity duration-300" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div>
           <h3 id="modal-title" class="text-2xl font-bold mb-3"></h3>
@@ -423,7 +450,7 @@
     (function () {
       const modal = document.getElementById('project-modal');
       const modalCloseBtn = document.getElementById('modal-close-btn');
-      const modalVideo = document.getElementById('modal-video');
+      let modalVideo = document.getElementById('modal-video'); // let because we will replace/reassign it
       const modalTitle = document.getElementById('modal-title');
       const modalDesc = document.getElementById('modal-description');
       const modalTech = document.getElementById('modal-tech-stack');
@@ -443,9 +470,16 @@
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
-        if (modalVideo) {
-          modalVideo.src = '';
+
+        const loader = document.getElementById('video-loader');
+        if (loader) loader.style.display = 'none';
+
+        if (modalVideo && modalVideo.parentNode) {
+          const newIframe = modalVideo.cloneNode(false);
+          modalVideo.parentNode.replaceChild(newIframe, modalVideo);
+          modalVideo = newIframe; // reassign to the fresh element
         }
+
         if (lastFocus) lastFocus.focus();
       }
 
@@ -461,9 +495,24 @@
           const data = btn.dataset;
           modalTitle.textContent = data.title || '';
           modalDesc.textContent = data.description || '';
-          if (modalVideo) modalVideo.src = data.video || '';
+
+          // lazy-load and autoplay iframe, with loader & fade
+          if (modalVideo && data.video) {
+            const loader = document.getElementById('video-loader');
+            try { modalVideo.style.opacity = '0'; } catch (e) {}
+            if (loader) loader.style.display = 'block';
+
+            // safe onload handler
+            modalVideo.onload = () => {
+              if (loader) loader.style.display = 'none';
+              try { modalVideo.style.opacity = '1'; } catch (e) {}
+            };
+
+            modalVideo.src = data.video + (data.video.indexOf('?') === -1 ? "?autoplay=1&rel=0&modestbranding=1" : "&autoplay=1&rel=0&modestbranding=1");
+          }
+
           modalRepo.href = data.repoLink || '#';
-          modalRepo.style.display = (data.repoLink && data.repoLink !== '#') ? 'inline-block' : 'inline-block';
+          modalRepo.style.display = (data.repoLink && data.repoLink !== '#') ? 'inline-block' : 'none';
 
           modalTech.innerHTML = '';
           if (data.tech) {
@@ -483,7 +532,20 @@
         btn.addEventListener('click', () => {
           modalTitle.textContent = btn.dataset.title || '';
           modalDesc.textContent = btn.dataset.description || '';
-          if (modalVideo) modalVideo.src = btn.dataset.video || '';
+
+          if (modalVideo && btn.dataset.video) {
+            const loader = document.getElementById('video-loader');
+            try { modalVideo.style.opacity = '0'; } catch (e) {}
+            if (loader) loader.style.display = 'block';
+
+            modalVideo.onload = () => {
+              if (loader) loader.style.display = 'none';
+              try { modalVideo.style.opacity = '1'; } catch (e) {}
+            };
+
+            modalVideo.src = btn.dataset.video + (btn.dataset.video.indexOf('?') === -1 ? "?autoplay=1&rel=0&modestbranding=1" : "&autoplay=1&rel=0&modestbranding=1");
+          }
+
           modalTech.innerHTML = '';
           modalRepo.style.display = 'none';
           openModal();
@@ -520,7 +582,7 @@
         points = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x888888, size: 3 }));
         scene.add(points);
 
-        // Build connections between nearby points (simple O(n^2) approach, balanced by particle count)
+        // Build connections between nearby points (simple O(n^2) approach)
         const linePositions = [];
         const threshold = 170;
         for (let i = 0; i < particles; i++) {
@@ -588,5 +650,3 @@
   </script>
 </body>
 </html>
-
-
