@@ -1,408 +1,590 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aman Jaiswal - AI/ML Engineer</title>
-    
-    <!-- Three.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aman Jaiswal - AI/ML Engineer</title>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Fira Code & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            overflow-x: hidden;
-        }
-        body.modal-open {
-            overflow: hidden;
-        }
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        .font-fira {
-            font-family: 'Fira Code', monospace;
-        }
-        .terminal-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.5em;
-            background-color: #58a6ff;
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink {
-            from, to { background-color: transparent }
-            50% { background-color: #58a6ff; }
-        }
-        .glass-effect {
-            background: rgba(13, 17, 23, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(48, 54, 61, 0.5);
-        }
-        .section-title {
-            @apply text-3xl md:text-4xl font-bold text-gray-100 mb-12 text-center font-fira;
-        }
-        .project-card:hover .project-image {
-            transform: scale(1.05);
-        }
-        .content-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-        .scanline-effect::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(13, 17, 23, 0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06));
-            background-size: 100% 2px, 3px 100%;
-            z-index: 2;
-            pointer-events: none;
-            animation: scanline 10s linear infinite;
-        }
-        @keyframes scanline {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 100%; }
-        }
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-content {
-            width: 90%;
-            max-width: 60rem;
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 0.75rem;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-    </style>
+  <!-- Three.js (required for background) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Page styles (no @apply — ready for runtime CDN Tailwind) -->
+  <style>
+    /* Base colors & layout */
+    :root {
+      --bg: #0d1117;
+      --muted: #c9d1d9;
+      --glass: rgba(13,17,23,0.55);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--muted);
+      overflow-x: hidden;
+    }
+
+    /* Background canvas sits behind everything */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      display: block;
+    }
+
+    .font-fira { font-family: 'Fira Code', monospace; }
+
+    /* Section title replacement for @apply */
+    .section-title {
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 1.875rem; /* tailwind text-3xl */
+      text-align: center;
+      color: #f8fafc;
+      margin-bottom: 3rem; /* mb-12 */
+    }
+    @media (min-width: 768px) {
+      .section-title { font-size: 2.25rem; } /* md:text-4xl */
+    }
+
+    /* Terminal cursor used in hero */
+    .terminal-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.5em;
+      background-color: #58a6ff;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%,100% { background: transparent; }
+      50% { background: #58a6ff; }
+    }
+
+    .glass-effect {
+      background: rgba(13,17,23,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(48,54,61,0.5);
+    }
+
+    /* Modal styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      width: 92%;
+      max-width: 62rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 0.75rem;
+      transform: scale(0.98);
+      transition: transform 0.22s ease;
+    }
+    .modal-overlay.active .modal-content { transform: scale(1); }
+
+    /* Accessibility / minor helpers */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
 </head>
+
 <body class="text-lg">
+  <!-- Background canvas for Three.js -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-    <canvas id="bg-canvas"></canvas>
+  <!-- Page container -->
+  <div class="content-wrapper relative z-10">
 
-    <div class="content-wrapper">
-        <!-- Header -->
-        <header class="sticky top-0 z-50 glass-effect">
-            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-                <a href="#" class="text-xl font-bold text-gray-100 font-fira">Aman Jaiswal</a>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about" class="hover:text-blue-400 transition-colors duration-300">About</a>
-                    <a href="#projects" class="hover:text-blue-400 transition-colors duration-300">Projects</a>
-                    <a href="#skills" class="hover:text-blue-400 transition-colors duration-300">Skills</a>
-                    <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold">Download CV</a>
-                </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
-            </nav>
-            <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
-                <a href="#about" class="block py-2 hover:text-blue-400">About</a>
-                <a href="#projects" class="block py-2 hover:text-blue-400">Projects</a>
-                <a href="#skills" class="block py-2 hover:text-blue-400">Skills</a>
-                <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" class="block mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center">Download CV</a>
-            </div>
-        </header>
+    <!-- Header (sticky) -->
+    <header class="sticky top-0 z-50 glass-effect">
+      <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#home" class="text-xl font-bold text-gray-100 font-fira">Aman Jaiswal</a>
 
-        <main class="container mx-auto px-6">
-
-            <!-- Hero Section -->
-            <section id="home" class="min-h-screen flex items-center relative">
-                <div class="scanline-effect"></div>
-                <div class="w-full">
-                    <div class="font-fira text-left max-w-4xl mx-auto">
-                        <div class="text-green-400 mb-2">&gt; Aman Jaiswal</div>
-                        <h1 class="text-4xl md:text-6xl font-bold text-gray-100 mb-4">
-                            <span id="typewriter"></span><span class="terminal-cursor"></span>
-                        </h1>
-                        <div id="links-container" class="opacity-0 transition-opacity duration-1000 mt-8 flex items-center space-x-6">
-                            <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors" title="LinkedIn"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-                            <a href="https://github.com/Aman-2107" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors" title="GitHub"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                            <a href="#projects" class="bg-transparent border border-blue-500 text-blue-400 px-6 py-3 rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300 font-semibold">View My Work</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- About Me Section -->
-            <section id="about" class="py-20 md:py-32">
-                 <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-12 items-center">
-                    <div class="md:col-span-2 space-y-4">
-                        <h2 class="text-3xl font-bold text-gray-100">About Me</h2>
-                        <p class="text-gray-300">A graduate AI/ML Engineer with a Distinction from Queen Mary University of London, specialising in Natural Language Processing. I'm passionate about designing and deploying end-to-end machine learning solutions, with a portfolio that includes high-impact applications in legal-tech and mental health.</p>
-                        <p class="text-gray-400">I am actively seeking a graduate software engineering role in the UK where I can apply my skills in AI and machine learning to solve complex problems and contribute to innovative projects.</p>
-                    </div>
-                    <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1"><img src="/assets/myself.jpg" alt="Aman Jaiswal" class="w-full project-image transition-transform duration-300 rounded-md"></div>
-                </div>
-            </section>
-
-            <!-- Projects Section -->
-            <section id="projects" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
-                <h2 class="section-title">Featured Projects</h2>
-                <div class="max-w-6xl mx-auto grid md:grid-cols-1 gap-16">
-                    <!-- Project 1 -->
-                    <div class="grid md:grid-cols-2 gap-8 items-center">
-                        <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1"><img src="https://placehold.co/800x600/3b82f6/ffffff?text=Legal-Tech+AI" alt="Legal Document Analyzer" class="w-full project-image transition-transform duration-300 rounded-md"></div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-3 text-blue-400">Hybrid AI System for Legal Clause Extraction</h3>
-                            <p class="mb-4 text-gray-300">A novel hybrid AI system that solves the "long-tail" problem in legal contract review. The system combines a high-precision QA model for common clauses with a flexible few-shot learning model to dynamically identify rare and user-defined clauses with minimal data.</p>
-                            <div class="flex flex-wrap gap-2 mb-6"><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PyTorch</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Legal-BERT</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Prototypical Networks</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Few-Shot Learning</span></div>
-                            <button class="view-details-btn bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold" data-title="Hybrid AI System for Legal Clause Extraction" data-description="This system addresses the critical 'long-tail' problem in automated legal document analysis, where standard models fail on rare but important clauses. The architecture synergizes two models: a high-precision Question Answering (QA) model fine-tuned on Legal-BERT for 15 common clauses (achieving a 57.67% F1-score), and a state-of-the-art Prototypical Network for few-shot learning. The few-shot model, trained via episodic learning, achieved an 82.12% accuracy on classifying unseen clause types, proving its ability to handle rare clauses dynamically. The complete inference pipeline integrates both models with advanced text processing to deliver comprehensive extraction from raw documents." data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-tech="Python,PyTorch,Legal-BERT,Prototypical Networks,Few-Shot Learning,Hugging Face" data-repo-link="#">View Details</button>
-                        </div>
-                    </div>
-                    <!-- Project 2 -->
-                    <div class="grid md:grid-cols-2 gap-8 items-center">
-                        <div class="rounded-lg overflow-hidden shadow-2xl md:order-2 glass-effect p-1"><img src="https://placehold.co/800x600/10b981/ffffff?text=CALMA-AI" alt="CALMA-AI" class="w-full project-image transition-transform duration-300 rounded-md"></div>
-                        <div class="md:order-1">
-                            <h3 class="text-2xl font-bold mb-3 text-green-400">CALMA-AI: Emotional Companion</h3>
-                            <p class="mb-4 text-gray-300">A sophisticated, multi-modal AI emotional support system that operates entirely offline to guarantee 100% user privacy. The application features real-time, low-latency conversation loops for both text and voice interaction, powered by a custom-trained RoBERTa model for nuanced emotion detection.</p>
-                            <div class="flex flex-wrap gap-2 mb-6"><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PyTorch</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RoBERTa</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LLaMA</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Whisper</span></div>
-                            <button class="view-details-btn bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold" data-title="CALMA-AI: Emotional Companion for Mental Health" data-description="Developed a sophisticated, multi-modal AI emotional support system in Python that operates entirely offline to guarantee 100% user privacy. The core of the system is a roberta-base model fine-tuned for multi-label emotion classification, achieving a test F1-Macro score of 0.56. This was accomplished by implementing a custom Focal Loss trainer in PyTorch and using layer-wise learning rate decay. The dialogue engine uses a LLaMA-based model for empathetic response generation, while the voice module integrates Whisper (ASR) and F5-TTS (TTS) in a multi-threaded architecture for a seamless, low-latency interaction." data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-tech="Python,PyTorch,RoBERTa,LLaMA,Whisper,Focal Loss" data-repo-link="https://github.com/Aman-2107/-Calma">View Details</button>
-                        </div>
-                    </div>
-                    <!-- Project 3 -->
-                    <div class="grid md:grid-cols-2 gap-8 items-center">
-                        <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1"><img src="/assets/legal-search-engine-thumb.png" alt="Legal Search Engine" class="w-full project-image transition-transform duration-300 rounded-md"></div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-3 text-amber-400">Legal Search Engine with BM25 Ranking</h3>
-                            <p class="mb-4 text-gray-300">A full-featured desktop application built with Python and Tkinter to search and retrieve documents from the 100k+ document Lex-GLUE benchmark. It implements the BM25Okapi algorithm for efficient, relevance-based ranking, delivering search results in under 500ms.</p>
-                            <div class="flex flex-wrap gap-2 mb-6"><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Tkinter</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">BM25</span><span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Threading</span></div>
-                            <button class="view-details-btn bg-amber-600 text-white px-5 py-2 rounded-lg hover:bg-amber-700 transition-colors font-semibold" data-title="Legal Search Engine with BM25 Ranking" data-description="This project is a full-featured desktop application built with Python and Tkinter that provides an intuitive graphical user interface for searching through complex legal documents. It utilizes the robust BM25Okapi algorithm for efficient, relevance-based ranking and is designed to work with subsets of the Lex-GLUE benchmark dataset. Key features include a modern GUI, dynamic dataset loading from the Hugging Face Hub, query term highlighting, and a responsive, non-blocking UI achieved through multithreading to handle intensive search operations without freezing the interface." data-video="https://www.w3schools.com/html/mov_bbb.mp4" data-tech="Python,Tkinter,BM25,Threading" data-repo-link="https://github.com/Aman-2107/Legal-Search-Engine-with-BM25-Ranking">View Details</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Skills Section -->
-            <section id="skills" class="py-20 md:py-32">
-                <h2 class="section-title">Technical Skills</h2>
-                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div><h3 class="text-xl font-bold text-blue-400 mb-4">Programming & Databases</h3><ul class="space-y-2 text-gray-300"><li>Python</li><li>SQL</li><li>Java</li><li>Dart</li><li>C++</li><li>MySQL</li><li>Firebase</li></ul></div>
-                    <div><h3 class="text-xl font-bold text-green-400 mb-4">AI & Machine Learning</h3><ul class="space-y-2 text-gray-300"><li>PyTorch</li><li>Hugging Face Transformers</li><li>Scikit-learn</li><li>Pandas, NumPy, Matplotlib</li><li>NLTK</li><li>XGBoost</li><li>LSTMs</li></ul></div>
-                    <div><h3 class="text-xl font-bold text-amber-400 mb-4">Developer Tools & Platforms</h3><ul class="space-y-2 text-gray-300"><li>Git</li><li>Agile Methodologies</li><li>Flask</li><li>React</li><li>Bootstrap</li><li>Flutter</li></ul></div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-black bg-opacity-20 border-t border-gray-800">
-            <div class="container mx-auto px-6 py-8 text-center text-gray-400">
-                <div class="flex justify-center space-x-6 mb-4">
-                    <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" class="hover:text-blue-400 transition-colors">LinkedIn</a>
-                    <a href="https://github.com/Aman-2107" target="_blank" class="hover:text-blue-400 transition-colors">GitHub</a>
-                    <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" class="hover:text-blue-400 transition-colors">Download CV</a>
-                </div>
-                <p>&copy; 2025 Aman Jaiswal. Built with passion and code.</p>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Project Modal -->
-    <div id="project-modal" class="modal-overlay">
-        <div class="modal-content glass-effect p-8 relative">
-            <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-4xl font-light">&times;</button>
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div id="modal-media-container" class="rounded-lg w-full bg-black">
-                    <video id="modal-video" src="" class="rounded-lg w-full" autoplay loop muted playsinline></video>
-                </div>
-                <div>
-                    <h3 id="modal-title" class="text-2xl font-bold mb-3"></h3>
-                    <p id="modal-description" class="mb-4 text-gray-300"></p>
-                    <div id="modal-tech-stack" class="flex flex-wrap gap-2 mb-6"></div>
-                    <div class="flex items-center space-x-4 mt-6">
-                        <a id="modal-repo-link" href="#" target="_blank" class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-600 transition-colors font-semibold">GitHub Repo</a>
-                    </div>
-                </div>
-            </div>
+        <!-- Desktop nav -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#about" class="hover:text-blue-400 transition-colors duration-300">About</a>
+          <a href="#projects" class="hover:text-blue-400 transition-colors duration-300">Projects</a>
+          <a href="#research" class="hover:text-blue-400 transition-colors duration-300">Research</a>
+          <a href="#skills" class="hover:text-blue-400 transition-colors duration-300">Skills</a>
+          <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold">Download CV</a>
         </div>
+
+        <!-- Mobile hamburger -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-100" aria-label="Open menu" aria-expanded="false">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </nav>
+
+      <!-- Mobile menu (hidden by default) -->
+      <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+        <a href="#about" class="block py-2 hover:text-blue-400">About</a>
+        <a href="#projects" class="block py-2 hover:text-blue-400">Projects</a>
+        <a href="#research" class="block py-2 hover:text-blue-400">Research</a>
+        <a href="#skills" class="block py-2 hover:text-blue-400">Skills</a>
+        <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" rel="noopener noreferrer" class="block mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center">Download CV</a>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="container mx-auto px-6">
+
+      <!-- Hero -->
+      <section id="home" class="min-h-screen flex items-center relative py-16">
+        <div class="scanline-effect absolute inset-0 pointer-events-none"></div>
+
+        <div class="w-full max-w-4xl mx-auto">
+          <div class="font-fira text-left">
+            <div class="text-green-400 mb-2">&gt; Aman Jaiswal</div>
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-100 mb-4">
+              <span id="typewriter" aria-hidden="false"></span><span class="terminal-cursor" aria-hidden="true"></span>
+            </h1>
+
+            <div id="links-container" class="opacity-0 transition-opacity duration-700 mt-8 flex items-center space-x-6" aria-hidden="true">
+              <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 transition-colors" title="LinkedIn" aria-label="LinkedIn profile">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </a>
+
+              <a href="https://github.com/Aman-2107" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 transition-colors" title="GitHub" aria-label="GitHub profile">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              </a>
+
+              <a href="#projects" class="bg-transparent border border-blue-500 text-blue-400 px-6 py-3 rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300 font-semibold">View My Work</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section id="about" class="py-20 md:py-32">
+        <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-12 items-center">
+          <div class="md:col-span-2 space-y-4">
+            <h2 class="text-3xl font-bold text-gray-100">About Me</h2>
+            <p class="text-gray-300">A graduate AI/ML Engineer with a Distinction from Queen Mary University of London, specialising in Natural Language Processing. I'm passionate about designing and deploying end-to-end machine learning solutions, with a portfolio that includes high-impact applications in legal-tech and mental health.</p>
+            <p class="text-gray-400">I am actively seeking a graduate software engineering role in the UK where I can apply my skills in AI and machine learning to solve complex problems and contribute to innovative projects.</p>
+          </div>
+
+          <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1">
+            <img src="/assets/myself.JPEG" alt="Portrait of Aman Jaiswal" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section id="projects" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
+        <h2 class="section-title">Featured Projects</h2>
+
+        <div class="max-w-6xl mx-auto grid gap-16">
+          <!-- Project 1 -->
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1">
+              <img src="/assets/anamnesis-thumb.png" alt="Anamnesis AI System screenshot" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold mb-3 text-purple-400">Anamnesis: AI Clinical Memory System</h3>
+              <p class="mb-4 text-gray-300">End-to-end AI-driven patient intake and structured clinical memory system integrating LLaMA-3.3-70B with a Retrieval-Augmented Generation pipeline.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">FastAPI</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">pgvector</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RAG</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">React</span>
+              </div>
+              <button class="view-details-btn bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
+                      data-title="Anamnesis: AI Clinical Memory System"
+                      data-description="Developed an end-to-end AI-driven patient intake and clinical memory system that simulates a real-world healthcare workflow. The system autonomously conducts structured multi-stage conversational intake, stores dialogue in PostgreSQL (JSONB), and uses LLaMA-based models to transform unstructured conversations into validated clinical notes. Implemented a RAG pipeline with embeddings and vector search for evidence-grounded QA."
+                      data-video="/assets/anamnesis-demo.mp4"
+                      data-tech="Python,FastAPI,PostgreSQL,pgvector,RAG,React,TypeScript"
+                      data-repo-link="https://github.com/Aman-2107/Anamnesis">
+                View Details
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="rounded-lg overflow-hidden shadow-2xl md:order-2 glass-effect p-1">
+              <img src="https://placehold.co/800x600/10b981/ffffff?text=CALMA-AI" alt="CALMA AI placeholder" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
+            </div>
+            <div class="md:order-1">
+              <h3 class="text-2xl font-bold mb-3 text-green-400">CALMA-AI: Emotional Companion</h3>
+              <p class="mb-4 text-gray-300">A multi-modal AI emotional support system designed to operate offline to protect user privacy. Features real-time low-latency conversation loops, RoBERTa-based emotion detection and a LLaMA-based dialogue engine.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PyTorch</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RoBERTa</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LLaMA</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Whisper</span>
+              </div>
+              <button class="view-details-btn bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold"
+                      data-title="CALMA-AI: Emotional Companion for Mental Health"
+                      data-description="Developed a multi-modal emotional companion that runs offline. Fine-tuned RoBERTa for multi-label emotion classification and integrated Whisper for ASR and TTS for low-latency voice interaction."
+                      data-video="/assets/calma-demo.mp4"
+                      data-tech="Python,PyTorch,RoBERTa,LLaMA,Whisper"
+                      data-repo-link="https://github.com/Aman-2107/-Calma">
+                View Details
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1">
+              <img src="/assets/legal-search-engine-thumb.png" alt="Legal Search Engine screenshot" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold mb-3 text-amber-400">Legal Search Engine with BM25 Ranking</h3>
+              <p class="mb-4 text-gray-300">A desktop app built in Python/Tkinter to search and retrieve documents from large legal corpora. Implements BM25 for relevance ranking and provides fast, responsive UI through multithreading.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Tkinter</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">BM25</span>
+                <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Threading</span>
+              </div>
+              <button class="view-details-btn bg-amber-600 text-white px-5 py-2 rounded-lg hover:bg-amber-700 transition-colors font-semibold"
+                      data-title="Legal Search Engine with BM25 Ranking"
+                      data-description="Desktop search tool leveraging BM25 for relevance ranking across legal documents. Features dynamic dataset loading, query term highlighting and a responsive multi-threaded UI."
+                      data-video="/assets/legal-search-demo.mp4"
+                      data-tech="Python,Tkinter,BM25,Threading"
+                      data-repo-link="https://github.com/Aman-2107/Legal-Search-Engine-with-BM25-Ranking">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+	
+      <div class="max-w-6xl mx-auto border-t border-gray-800 my-20"></div>
+      <!-- Research -->
+      <section id="research" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
+        <h2 class="section-title">Research</h2>
+
+        <div class="max-w-6xl mx-auto">
+          <div class="mb-8">
+            <h3 class="text-3xl font-bold text-blue-400 mb-4">A Comparative Study of Transformer Architectures for Legal Clause Extraction</h3>
+            <p class="text-gray-300 mb-6">MSc Dissertation evaluating encoder-only, encoder-decoder, and zero-shot LLMs on legal clause extraction benchmarks. Includes dataset prep, evaluation metrics and error analysis.</p>
+
+            <button class="view-research-btn bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                    data-title="Dissertation Presentation & Summary"
+                    data-video="/assets/dissertation-presentation.mp4"
+                    data-description="This dissertation evaluates multiple transformer architectures for legal clause extraction, using Exact Match and F1 for evaluation and providing a detailed error analysis across long-tail clause categories.">
+              View Presentation & Summary
+            </button>
+          </div>
+
+          <div class="glass-effect p-2 rounded-lg">
+            <iframe src="/assets/Dissertation_Paper.pdf" class="w-full h-[900px] rounded-md research-media" title="Dissertation PDF"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section id="skills" class="py-20 md:py-32">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div>
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Programming</h3>
+            <ul class="space-y-2 text-gray-300">
+              <li>Python</li>
+              <li>SQL</li>
+              <li>JavaScript</li>
+              <li>TypeScript</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-green-400 mb-4">AI & LLM Systems</h3>
+            <ul class="space-y-2 text-gray-300">
+              <li>Large Language Models</li>
+              <li>Retrieval-Augmented Generation (RAG)</li>
+              <li>Fine-tuning & Evaluation</li>
+              <li>Embeddings, Vector Search (pgvector)</li>
+              <li>PyTorch & Hugging Face</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-amber-400 mb-4">Backend & Tools</h3>
+            <ul class="space-y-2 text-gray-300">
+              <li>FastAPI</li>
+              <li>PostgreSQL + pgvector</li>
+              <li>Docker</li>
+              <li>Git & CI</li>
+              <li>Linux</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-20 border-t border-gray-800">
+      <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+        <div class="flex justify-center space-x-6 mb-4">
+          <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">LinkedIn</a>
+          <a href="https://github.com/Aman-2107" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">GitHub</a>
+          <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">Download CV</a>
+        </div>
+        <p>&copy; 2026 Aman Jaiswal. Built with passion and code.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Project Modal (shared for projects & research) -->
+  <div id="project-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
+    <div class="modal-content glass-effect p-8 relative" role="document">
+      <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl" aria-label="Close modal">&times;</button>
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div id="modal-media-container" class="rounded-lg w-full bg-black">
+          <video id="modal-video" src="" class="rounded-lg w-full" controls playsinline></video>
+        </div>
+        <div>
+          <h3 id="modal-title" class="text-2xl font-bold mb-3"></h3>
+          <p id="modal-description" class="mb-4 text-gray-300"></p>
+          <div id="modal-tech-stack" class="flex flex-wrap gap-2 mb-6"></div>
+          <div class="flex items-center space-x-4 mt-6">
+            <a id="modal-repo-link" href="#" target="_blank" rel="noopener noreferrer" class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-600 transition-colors font-semibold">GitHub Repo</a>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // --- Mobile Menu Toggle ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+  <!-- Main scripts: behavior & background rendering -->
+  <script>
+    /* ---------------- Mobile menu toggle ---------------- */
+    (function () {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+          const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+          mobileMenuButton.setAttribute('aria-expanded', (!expanded).toString());
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    })();
 
-        // --- Typewriter Effect ---
-        const typewriterElement = document.getElementById('typewriter');
-        const linksContainer = document.getElementById('links-container');
-        const text = "AI/ML Engineer";
-        let index = 0;
-        function type() {
-            if (index < text.length) {
-                typewriterElement.textContent += text.charAt(index);
-                index++;
-                setTimeout(type, 100);
-            } else {
-                linksContainer.classList.remove('opacity-0');
-            }
+    /* ---------------- Typewriter / hero reveal ---------------- */
+    (function () {
+      const typewriterElement = document.getElementById('typewriter');
+      const linksContainer = document.getElementById('links-container');
+      const text = "AI/ML Engineer";
+      let idx = 0;
+
+      function type() {
+        if (!typewriterElement) return;
+        if (idx < text.length) {
+          typewriterElement.textContent += text.charAt(idx++);
+          setTimeout(type, 100);
+        } else {
+          linksContainer?.classList.remove('opacity-0');
+          linksContainer?.setAttribute('aria-hidden', 'false');
         }
+      }
+
+      if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => setTimeout(type, 500));
+      } else {
+        setTimeout(type, 500);
+      }
+    })();
 
-        // --- Project Modal Logic ---
-        const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
-        const modal = document.getElementById('project-modal');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-        const modalVideo = document.getElementById('modal-video');
+    /* ---------------- Modal behavior + focus management ---------------- */
+    (function () {
+      const modal = document.getElementById('project-modal');
+      const modalCloseBtn = document.getElementById('modal-close-btn');
+      const modalVideo = document.getElementById('modal-video');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDesc = document.getElementById('modal-description');
+      const modalTech = document.getElementById('modal-tech-stack');
+      const modalRepo = document.getElementById('modal-repo-link');
 
-        viewDetailsButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const data = button.dataset;
-                document.getElementById('modal-title').textContent = data.title;
-                document.getElementById('modal-description').textContent = data.description;
-                modalVideo.src = data.video;
-                document.getElementById('modal-repo-link').href = data.repoLink;
+      let lastFocus = null;
 
-                const techStackContainer = document.getElementById('modal-tech-stack');
-                techStackContainer.innerHTML = '';
-                data.tech.split(',').forEach(tech => {
-                    const techTag = document.createElement('span');
-                    techTag.className = 'bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm';
-                    techTag.textContent = tech.trim();
-                    techStackContainer.appendChild(techTag);
-                });
+      function openModal() {
+        lastFocus = document.activeElement;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        modalCloseBtn?.focus();
+      }
 
-                modal.classList.add('active');
-                document.body.classList.add('modal-open');
+      function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        if (modalVideo) {
+          modalVideo.pause();
+          modalVideo.src = '';
+        }
+        if (lastFocus) lastFocus.focus();
+      }
+
+      modalCloseBtn?.addEventListener('click', closeModal);
+      modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      // Project buttons: populate modal and open
+      document.querySelectorAll('.view-details-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const data = btn.dataset;
+          modalTitle.textContent = data.title || '';
+          modalDesc.textContent = data.description || '';
+          if (modalVideo) modalVideo.src = data.video || '';
+          modalRepo.href = data.repoLink || '#';
+          modalRepo.style.display = (data.repoLink && data.repoLink !== '#') ? 'inline-block' : 'inline-block';
+
+          modalTech.innerHTML = '';
+          if (data.tech) {
+            data.tech.split(',').forEach(t => {
+              const span = document.createElement('span');
+              span.className = 'bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm';
+              span.textContent = t.trim();
+              modalTech.appendChild(span);
             });
+          }
+          openModal();
         });
+      });
 
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.classList.remove('modal-open');
-            // Pause the video and clear the source when closing
-            modalVideo.pause();
-            modalVideo.src = "";
-        }
-
-        modalCloseBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
+      // Research buttons: use the shared modal
+      document.querySelectorAll('.view-research-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          modalTitle.textContent = btn.dataset.title || '';
+          modalDesc.textContent = btn.dataset.description || '';
+          if (modalVideo) modalVideo.src = btn.dataset.video || '';
+          modalTech.innerHTML = '';
+          modalRepo.style.display = 'none';
+          openModal();
         });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && modal.classList.contains('active')) {
-                closeModal();
-            }
-        });
+      });
+    })();
 
-        // --- Three.js Neural Network Background ---
-        let scene, camera, renderer, points, lines;
-        let mouseX = 0, mouseY = 0;
-        let windowHalfX = window.innerWidth / 2;
-        let windowHalfY = window.innerHeight / 2;
+    /* ---------------- Three.js neural background ---------------- */
+    (function () {
+      // Ensure THREE is available
+      if (typeof THREE === 'undefined') return;
 
-        function init() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-            camera.position.z = 1000;
-            const particles = 500;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particles * 3);
-            for (let i = 0; i < positions.length; i += 3) {
-                positions[i] = Math.random() * 2000 - 1000;
-                positions[i + 1] = Math.random() * 2000 - 1000;
-                positions[i + 2] = Math.random() * 2000 - 1000;
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const material = new THREE.PointsMaterial({ color: 0x444444, size: 2 });
-            points = new THREE.Points(geometry, material);
-            scene.add(points);
-            const lineGeometry = new THREE.BufferGeometry();
-            const linePositions = [];
-            for (let i = 0; i < particles; i++) {
-                for (let j = i + 1; j < particles; j++) {
-                    const dx = positions[i * 3] - positions[j * 3];
-                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-                    if (Math.sqrt(dx * dx + dy * dy + dz * dz) < 150) {
-                        linePositions.push(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
-                        linePositions.push(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]);
-                    }
-                }
-            }
-            lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
-            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x2a2a2a, transparent: true, opacity: 0.5 });
-            lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-            scene.add(lines);
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.addEventListener('mousemove', onDocumentMouseMove, false);
-            window.addEventListener('resize', onWindowResize, false);
-        }
-        function onWindowResize() {
-            windowHalfX = window.innerWidth / 2;
-            windowHalfY = window.innerHeight / 2;
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        function onDocumentMouseMove(event) {
-            mouseX = event.clientX - windowHalfX;
-            mouseY = event.clientY - windowHalfY;
-        }
-        function animate() {
-            requestAnimationFrame(animate);
-            render();
-        }
-        function render() {
-            camera.position.x += (mouseX - camera.position.x) * .0005;
-            camera.position.y += (-mouseY - camera.position.y) * .0005;
-            camera.lookAt(scene.position);
-            const time = Date.now() * 0.00005;
-            points.rotation.x = time * 0.25;
-            points.rotation.y = time * 0.5;
-            lines.rotation.x = time * 0.25;
-            lines.rotation.y = time * 0.5;
-            renderer.render(scene, camera);
-        }
-        init();
-        animate();
-    </script>
+      let scene, camera, renderer, points, lines;
+      let mouseX = 0, mouseY = 0;
+      let windowHalfX = window.innerWidth / 2;
+      let windowHalfY = window.innerHeight / 2;
 
+      function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.z = 1000;
+
+        const particles = 320;
+        const positions = new Float32Array(particles * 3);
+        for (let i = 0; i < positions.length; i += 3) {
+          positions[i] = Math.random() * 2000 - 1000;
+          positions[i + 1] = Math.random() * 2000 - 1000;
+          positions[i + 2] = Math.random() * 2000 - 1000;
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        points = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x888888, size: 3 }));
+        scene.add(points);
+
+        // Build connections between nearby points (simple O(n^2) approach, balanced by particle count)
+        const linePositions = [];
+        const threshold = 170;
+        for (let i = 0; i < particles; i++) {
+          for (let j = i + 1; j < particles; j++) {
+            const dx = positions[i * 3] - positions[j * 3];
+            const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+            const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+            const d2 = dx * dx + dy * dy + dz * dz;
+            if (d2 < threshold * threshold) {
+              linePositions.push(
+                positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
+                positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]
+              );
+            }
+          }
+        }
+
+        const lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+        lines = new THREE.LineSegments(lineGeometry, new THREE.LineBasicMaterial({ color: 0x2a2a2a, transparent: true, opacity: 0.6 }));
+        scene.add(lines);
+
+        renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX - windowHalfX;
+          mouseY = e.clientY - windowHalfY;
+        }, false);
+
+        window.addEventListener('resize', onWindowResize, false);
+      }
+
+      function onWindowResize() {
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        camera.position.x += (mouseX - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+
+        const time = Date.now() * 0.00005;
+        if (points) {
+          points.rotation.x = time * 0.25;
+          points.rotation.y = time * 0.5;
+        }
+        if (lines) {
+          lines.rotation.x = time * 0.25;
+          lines.rotation.y = time * 0.5;
+        }
+        renderer.render(scene, camera);
+      }
+
+      init();
+      animate();
+    })();
+  </script>
 </body>
 </html>
-
-
-
-
