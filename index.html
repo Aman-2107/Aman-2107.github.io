@@ -3,31 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aman Jaiswal - AI/ML Engineer</title>
 
-  <!-- Three.js (required for background) -->
+  <title>Aman Jaiswal — Founding Engineer</title>
+  <meta name="description" content="Founding Engineer at Blocvue. I build AI into domains where being wrong is expensive, and enforce correctness at the data layer rather than in application code." />
+
+  <!-- Open Graph / social preview. Controls how this page looks when shared on
+       LinkedIn, Slack, WhatsApp etc. Replace og-image.png with a 1200x630 image. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://amanjaiswal.co.uk/" />
+  <meta property="og:title" content="Aman Jaiswal — Founding Engineer" />
+  <meta property="og:description" content="Founding Engineer at Blocvue. Creator of BillSync. MSc Artificial Intelligence, Distinction, QMUL." />
+  <meta property="og:image" content="https://amanjaiswal.co.uk/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/favicon.png" />
+  <link rel="canonical" href="https://amanjaiswal.co.uk/" />
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-  <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Page styles (no @apply — ready for runtime CDN Tailwind) -->
   <style>
-    /* Base colors & layout */
     :root {
       --bg: #0d1117;
       --muted: #c9d1d9;
       --glass: rgba(13,17,23,0.55);
     }
 
-    html, body {
-      height: 100%;
-    }
+    html, body { height: 100%; }
 
     body {
       margin: 0;
@@ -37,11 +42,8 @@
       overflow-x: hidden;
     }
 
-    body.modal-open {
-      overflow: hidden;
-    }
+    body.modal-open { overflow: hidden; }
 
-    /* Background canvas sits behind everything */
     #bg-canvas {
       position: fixed;
       inset: 0;
@@ -53,20 +55,18 @@
 
     .font-fira { font-family: 'Fira Code', monospace; }
 
-    /* Section title replacement for @apply */
     .section-title {
       font-family: 'Fira Code', monospace;
       font-weight: 700;
-      font-size: 1.875rem; /* tailwind text-3xl */
+      font-size: 1.875rem;
       text-align: center;
       color: #f8fafc;
-      margin-bottom: 3rem; /* mb-12 */
+      margin-bottom: 3rem;
     }
     @media (min-width: 768px) {
-      .section-title { font-size: 2.25rem; } /* md:text-4xl */
+      .section-title { font-size: 2.25rem; }
     }
 
-    /* Terminal cursor used in hero */
     .terminal-cursor {
       display: inline-block;
       width: 10px;
@@ -87,7 +87,6 @@
       border: 1px solid rgba(48,54,61,0.5);
     }
 
-    /* Modal styling (premium animation) */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -103,7 +102,7 @@
     .modal-overlay.active {
       opacity: 1;
       pointer-events: auto;
-      backdrop-filter: blur(6px); /* subtle cinematic blur */
+      backdrop-filter: blur(6px);
     }
     .modal-content {
       width: 92%;
@@ -120,15 +119,10 @@
       transform: translateY(0) scale(1);
     }
 
-    /* Loader default hidden */
-    #video-loader {
-      display: none;
-    }
+    #video-loader { display: none; }
 
-    /* Accessibility / minor helpers */
     .sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-    /* research media iframe styling */
     .research-media {
       width: 100%;
       height: 100%;
@@ -137,31 +131,73 @@
       border: 1px solid rgba(71, 85, 105, 0.15);
       background: #07080a;
     }
+
+    /* Visible keyboard focus */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid #58a6ff;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* Phone screenshot strip */
+    .phone-shot {
+      border-radius: 1rem;
+      border: 1px solid rgba(48,54,61,0.8);
+      background: #07080a;
+      width: 100%;
+      display: block;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    .results-table th,
+    .results-table td {
+      text-align: left;
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid rgba(48,54,61,0.6);
+    }
+    .results-table th {
+      color: #f8fafc;
+      font-weight: 600;
+    }
+    .results-table tr:last-child td { border-bottom: none; }
+    .results-table .highlight td { color: #f8fafc; font-weight: 600; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .terminal-cursor { animation: none; background: #58a6ff; }
+    }
   </style>
 </head>
 
 <body class="text-lg">
-  <!-- Background canvas for Three.js -->
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-  <!-- Page container -->
   <div class="content-wrapper relative z-10">
 
-    <!-- Header (sticky) -->
+    <!-- Header -->
     <header class="sticky top-0 z-50 glass-effect">
       <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
         <a href="#home" class="text-xl font-bold text-gray-100 font-fira">Aman Jaiswal</a>
 
-        <!-- Desktop nav -->
-        <div class="hidden md:flex items-center space-x-8">
+        <div class="hidden md:flex items-center space-x-7">
           <a href="#about" class="hover:text-blue-400 transition-colors duration-300">About</a>
+          <a href="#experience" class="hover:text-blue-400 transition-colors duration-300">Experience</a>
           <a href="#projects" class="hover:text-blue-400 transition-colors duration-300">Projects</a>
           <a href="#research" class="hover:text-blue-400 transition-colors duration-300">Research</a>
           <a href="#skills" class="hover:text-blue-400 transition-colors duration-300">Skills</a>
           <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold">Download CV</a>
         </div>
 
-        <!-- Mobile hamburger -->
         <button id="mobile-menu-button" class="md:hidden text-gray-100" aria-label="Open menu" aria-expanded="false">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -169,9 +205,9 @@
         </button>
       </nav>
 
-      <!-- Mobile menu (hidden by default) -->
       <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
         <a href="#about" class="block py-2 hover:text-blue-400">About</a>
+        <a href="#experience" class="block py-2 hover:text-blue-400">Experience</a>
         <a href="#projects" class="block py-2 hover:text-blue-400">Projects</a>
         <a href="#research" class="block py-2 hover:text-blue-400">Research</a>
         <a href="#skills" class="block py-2 hover:text-blue-400">Skills</a>
@@ -179,19 +215,20 @@
       </div>
     </header>
 
-    <!-- Main -->
     <main class="container mx-auto px-6">
 
       <!-- Hero -->
       <section id="home" class="min-h-screen flex items-center relative py-16">
-        <div class="scanline-effect absolute inset-0 pointer-events-none"></div>
-
         <div class="w-full max-w-4xl mx-auto">
           <div class="font-fira text-left">
             <div class="text-green-400 mb-2">&gt; Aman Jaiswal</div>
             <h1 class="text-4xl md:text-6xl font-bold text-gray-100 mb-4">
-              <span id="typewriter" aria-hidden="false"></span><span class="terminal-cursor" aria-hidden="true"></span>
+              <span id="typewriter"></span><span class="terminal-cursor" aria-hidden="true"></span>
             </h1>
+
+            <p class="text-gray-400 text-base md:text-xl max-w-2xl font-sans leading-relaxed">
+              I build AI into domains where being wrong is expensive.
+            </p>
 
             <div id="links-container" class="opacity-0 transition-opacity duration-700 mt-8 flex items-center space-x-6" aria-hidden="true">
               <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 transition-colors" title="LinkedIn" aria-label="LinkedIn profile">
@@ -202,7 +239,7 @@
                 <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
               </a>
 
-              <a href="#projects" class="bg-transparent border border-blue-500 text-blue-400 px-6 py-3 rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300 font-semibold">View My Work</a>
+              <a href="#experience" class="bg-transparent border border-blue-500 text-blue-400 px-6 py-3 rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300 font-semibold">View My Work</a>
             </div>
           </div>
         </div>
@@ -213,8 +250,9 @@
         <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-12 items-center">
           <div class="md:col-span-2 space-y-4">
             <h2 class="text-3xl font-bold text-gray-100">About Me</h2>
-            <p class="text-gray-300">A graduate AI/ML Engineer with a Distinction from Queen Mary University of London, specialising in Natural Language Processing. I'm passionate about designing and deploying end-to-end machine learning solutions, with a portfolio that includes high-impact applications in legal-tech and mental health.</p>
-            <p class="text-gray-400">I am actively seeking a graduate software engineering role in the UK where I can apply my skills in AI and machine learning to solve complex problems and contribute to innovative projects.</p>
+            <p class="text-gray-300">I'm a Founding Engineer at Blocvue, a compliance platform for UK higher-risk residential buildings, where a missed statutory deadline can be a criminal offence rather than a support ticket. I work across Next.js, NestJS and PostgreSQL on AWS.</p>
+            <p class="text-gray-400">Before that I took a Distinction in MSc Artificial Intelligence at Queen Mary University of London. My dissertation concluded that zero-shot language models are too unreliable for systems where auditable accuracy is non-negotiable. I've spent the time since building systems that take that seriously.</p>
+            <p class="text-gray-400">The same pattern runs through everything here: correctness enforced at the data layer rather than in application code, AI that cites its sources and asks before it acts, and privacy handled by architecture rather than policy.</p>
           </div>
 
           <div class="flex justify-center">
@@ -225,19 +263,102 @@
         </div>
       </section>
 
+      <!-- Experience -->
+      <section id="experience" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
+        <h2 class="section-title">Experience</h2>
+
+        <div class="max-w-5xl mx-auto space-y-12">
+
+          <!-- Blocvue -->
+          <article class="glass-effect rounded-lg p-8">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+              <h3 class="text-2xl font-bold text-blue-400">Founding Engineer — Blocvue</h3>
+              <span class="font-fira text-sm text-gray-500">Aug 2026 – Present</span>
+            </div>
+            <p class="text-gray-500 text-base mb-6 font-fira">Compliance platform for UK higher-risk residential buildings · Live since September 2026</p>
+
+            <div class="space-y-4 text-gray-300">
+              <p>Blocvue is a multi-tenant compliance platform for UK higher-risk residential buildings, a domain where a missed statutory deadline can be a criminal offence rather than a support ticket. I work on full-stack delivery and platform operations across Next.js, NestJS and PostgreSQL on AWS.</p>
+
+              <p>The tenancy model keeps row-level security as the enforcement boundary rather than application code. Across 100+ tables, every client's data is isolated at the database, not by a check somewhere in the API layer that someone can forget to write. The platform is designed to scale to 3,000 buildings.</p>
+
+              <p>An applicability engine maps 55 statutory duties across four legal frameworks onto individual buildings, so each building shows the obligations that actually apply to it. A versioned document layer holds the golden thread, a statutory record in which nothing can be silently replaced.</p>
+
+              <p>Built the platform's regulatory-change monitor: an AI layer that watches legislation.gov.uk and regulator guidance for changes to statutory obligations, maps each change against the platform's obligation register, and reports what needs to move. Every flag is cited to source and nothing is applied without human sign-off. In a domain where a confident wrong answer has legal consequences, the design is verification and provenance first.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-6">
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Next.js</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">NestJS</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">TypeScript</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">AWS</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Row-Level Security</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Multi-Tenant</span>
+            </div>
+          </article>
+
+          <!-- BillSync -->
+          <article class="glass-effect rounded-lg p-8">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+              <h3 class="text-2xl font-bold text-teal-400">Founder &amp; Solo Developer — BillSync</h3>
+              <span class="font-fira text-sm text-gray-500">Apr 2026 – Present</span>
+            </div>
+            <p class="text-gray-500 text-base mb-6 font-fira">Personal finance tracker and bill splitter · Android and iOS</p>
+
+            <div class="grid lg:grid-cols-5 gap-8 items-start">
+              <div class="lg:col-span-3 space-y-4 text-gray-300">
+                <p>BillSync is a personal finance tracker and a social bill-splitter in one app. You track your own spending and budgets, and split bills with friends and groups, without switching between two apps. I designed, built and shipped it solo: product, backend, mobile client and store releases.</p>
+
+                <p>Its assistant runs Google's Gemma 4 (E2B, LiteRT-LM, roughly 2.6&nbsp;GB) entirely on the phone. It can log an expense, split a bill or settle up, and every one of those is shown for confirmation before it runs. No question about your money leaves the device. There is no server-side AI, no model provider ever receives your finances, and there is no analytics or crash-reporting SDK in the app.</p>
+
+                <p>Money is computed in the database in exact decimal, never in floating point on the client. Shares round to the smallest unit of the currency and any rounding remainder goes to the person who paid, so a bill's shares always add up to the bill, and a balance that reads zero is zero.</p>
+
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Flutter</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Dart 3</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Riverpod</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Supabase</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Gemma 4</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LiteRT-LM</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">On-Device Inference</span>
+                </div>
+
+                <!-- TODO: replace both hrefs with the real store listings once live -->
+                <div class="flex flex-wrap items-center gap-4 pt-4">
+                  <a href="PLAY_STORE_URL" target="_blank" rel="noopener noreferrer" class="bg-teal-600 text-white px-5 py-2 rounded-lg hover:bg-teal-700 transition-colors font-semibold">Get it on Google Play</a>
+                  <a href="APP_STORE_URL" target="_blank" rel="noopener noreferrer" class="border border-teal-500 text-teal-400 px-5 py-2 rounded-lg hover:bg-teal-500 hover:text-white transition-colors font-semibold">Download on the App Store</a>
+                </div>
+              </div>
+
+              <div class="lg:col-span-2 grid grid-cols-3 gap-3">
+                <img src="/assets/billsync-home.png" alt="BillSync home screen showing current balance and recent transactions" class="phone-shot" loading="lazy">
+                <img src="/assets/billsync-stats.png" alt="BillSync statistics screen showing spending by category" class="phone-shot" loading="lazy">
+                <img src="/assets/billsync-split.png" alt="BillSync split screen showing net position and groups" class="phone-shot" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <div class="max-w-6xl mx-auto border-t border-gray-800 my-20"></div>
+
       <!-- Projects -->
       <section id="projects" class="py-20 md:py-32 bg-black bg-opacity-20 px-6">
-        <h2 class="section-title">Featured Projects</h2>
+        <h2 class="section-title">Projects</h2>
 
         <div class="max-w-6xl mx-auto grid gap-16">
-          <!-- Project 1 -->
+
+          <!-- Anamnesis -->
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1">
               <img src="/assets/anamnesis-thumb.png" alt="Anamnesis AI System screenshot" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
             </div>
             <div>
-              <h3 class="text-2xl font-bold mb-3 text-purple-400">Anamnesis: AI Clinical Memory System</h3>
-              <p class="mb-4 text-gray-300">End-to-end AI-driven patient intake and structured clinical memory system integrating LLaMA-3.3-70B with a Retrieval-Augmented Generation pipeline.</p>
+              <h3 class="text-2xl font-bold mb-3 text-purple-400">Anamnesis: AI Patient Intake &amp; Clinical Memory</h3>
+              <p class="mb-4 text-gray-300">An end-to-end system that conducts structured conversational patient intake and turns free-text dialogue into a validated clinical note. Every answer it gives about a patient's history is traceable back to something the patient actually said.</p>
               <div class="flex flex-wrap gap-2 mb-6">
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span>
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">FastAPI</span>
@@ -247,8 +368,8 @@
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">React</span>
               </div>
               <button class="view-details-btn bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
-                      data-title="Anamnesis: AI Clinical Memory System"
-                      data-description="Developed an end-to-end AI-driven patient intake and clinical memory system that simulates a real-world healthcare workflow. The system autonomously conducts structured multi-stage conversational intake, stores dialogue in PostgreSQL (JSONB), and uses LLaMA-based models to transform unstructured conversations into validated clinical notes. Implemented a RAG pipeline with embeddings and vector search for evidence-grounded QA."
+                      data-title="Anamnesis: AI Patient Intake &amp; Clinical Memory"
+                      data-description="A multi-stage conversational intake workflow using LLaMA-3.3-70B via Groq extracts chief complaint, symptom attributes, medications, allergies, history and safety red flags, stored as validated JSONB in PostgreSQL. A RAG pipeline over sentence-transformer embeddings and pgvector answers clinician-style questions about a patient's history, with source attribution on every response. FastAPI backend, React and TypeScript frontend separating patient intake from clinician review."
                       data-video="/assets/anamnesis-demo.mp4"
                       data-tech="Python,FastAPI,PostgreSQL,pgvector,RAG,React,TypeScript"
                       data-repo-link="https://github.com/Aman-2107/Anamnesis">
@@ -257,14 +378,14 @@
             </div>
           </div>
 
-          <!-- Project 2 -->
+          <!-- Calma -->
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div class="rounded-lg overflow-hidden shadow-2xl md:order-2 glass-effect p-1">
-              <img src="https://placehold.co/800x600/10b981/ffffff?text=CALMA-AI" alt="CALMA AI placeholder" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
+              <img src="/assets/calma-thumb.png" alt="Calma emotional support system screenshot" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
             </div>
             <div class="md:order-1">
-              <h3 class="text-2xl font-bold mb-3 text-green-400">CALMA-AI: Emotional Companion</h3>
-              <p class="mb-4 text-gray-300">A multi-modal AI emotional support system designed to operate offline to protect user privacy. Features real-time low-latency conversation loops, RoBERTa-based emotion detection and a LLaMA-based dialogue engine.</p>
+              <h3 class="text-2xl font-bold mb-3 text-green-400">Calma: Offline Emotional Support System</h3>
+              <p class="mb-4 text-gray-300">A multi-modal emotional support system that runs entirely offline, so nothing a user says ever leaves their machine. Real-time text and voice, with a fine-tuned emotion classifier at its core.</p>
               <div class="flex flex-wrap gap-2 mb-6">
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span>
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PyTorch</span>
@@ -273,40 +394,34 @@
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Whisper</span>
               </div>
               <button class="view-details-btn bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold"
-                      data-title="CALMA-AI: Emotional Companion for Mental Health"
-                      data-description="Developed a multi-modal emotional companion that runs offline. Fine-tuned RoBERTa for multi-label emotion classification and integrated Whisper for ASR and TTS for low-latency voice interaction."
+                      data-title="Calma: Offline Emotional Support System"
+                      data-description="Fine-tuned a RoBERTa model for multi-label emotion classification using a custom Focal Loss trainer in PyTorch and layer-wise learning rate decay, reaching a test F1-macro of 0.56. LLaMA 3.2 handles response generation, with Whisper for speech recognition and F5-TTS for synthesis, in a multi-threaded architecture built for low-latency turn-taking. The whole system runs locally by design."
                       data-video="/assets/calma-demo.mp4"
-                      data-tech="Python,PyTorch,RoBERTa,LLaMA,Whisper"
-                      data-repo-link="https://github.com/Aman-2107/-Calma">
+                      data-tech="Python,PyTorch,RoBERTa,LLaMA,Whisper,F5-TTS"
+                      data-repo-link="https://github.com/Aman-2107/Calma">
                 View Details
               </button>
             </div>
           </div>
 
-          <!-- Project 3 -->
+          <!-- Legal Search Engine. Delete this whole block if you'd rather cut it. -->
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div class="rounded-lg overflow-hidden shadow-2xl glass-effect p-1">
               <img src="/assets/legal-search-engine-thumb.png" alt="Legal Search Engine screenshot" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
             </div>
             <div>
               <h3 class="text-2xl font-bold mb-3 text-amber-400">Legal Search Engine with BM25 Ranking</h3>
-              <p class="mb-4 text-gray-300">A desktop app built in Python/Tkinter to search and retrieve documents from large legal corpora. Implements BM25 for relevance ranking and provides fast, responsive UI through multithreading.</p>
+              <p class="mb-4 text-gray-300">A Python desktop application for retrieving documents from the Lex-GLUE legal benchmark, using BM25Okapi for relevance ranking. Multithreaded so the interface stays responsive during search, with schema normalisation to handle inconsistencies across heterogeneous legal datasets.</p>
               <div class="flex flex-wrap gap-2 mb-6">
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Python</span>
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Tkinter</span>
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">BM25</span>
                 <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Threading</span>
               </div>
-              <button class="view-details-btn bg-amber-600 text-white px-5 py-2 rounded-lg hover:bg-amber-700 transition-colors font-semibold"
-                      data-title="Legal Search Engine with BM25 Ranking"
-                      data-description="Desktop search tool leveraging BM25 for relevance ranking across legal documents. Features dynamic dataset loading, query term highlighting and a responsive multi-threaded UI."
-                      data-video="/assets/legal-search-demo.mp4"
-                      data-tech="Python,Tkinter,BM25,Threading"
-                      data-repo-link="https://github.com/Aman-2107/Legal-Search-Engine-with-BM25-Ranking">
-                View Details
-              </button>
+              <a href="https://github.com/Aman-2107/Legal-Search-Engine-with-BM25-Ranking" target="_blank" rel="noopener noreferrer" class="inline-block bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-600 transition-colors font-semibold">View on GitHub</a>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -317,20 +432,69 @@
         <h2 class="section-title">Research</h2>
 
         <div class="max-w-6xl mx-auto">
-          <div class="mb-8">
+          <div class="mb-10">
             <h3 class="text-3xl font-bold text-blue-400 mb-4">A Comparative Study of Transformer Architectures for Legal Clause Extraction</h3>
-            <p class="text-gray-300 mb-6">MSc Dissertation evaluating encoder-only, encoder-decoder, and zero-shot LLMs on legal clause extraction benchmarks. Includes dataset prep, evaluation metrics and error analysis.</p>
+            <p class="text-gray-500 font-fira text-base mb-6">MSc Dissertation · Queen Mary University of London · Distinction</p>
 
-            <button class="view-research-btn bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-                    data-title="Dissertation Presentation & Summary"
-                    data-video="https://www.youtube.com/embed/o_WR2F6L9qc"
-                    data-description="This dissertation evaluates multiple transformer architectures for legal clause extraction, using Exact Match and F1 for evaluation and providing a detailed error analysis across long-tail clause categories.">
-              View Presentation & Summary
-            </button>
+            <div class="space-y-4 text-gray-300 max-w-3xl">
+              <p>Automating contract review runs into two problems at once: contracts are far longer than a transformer's context window, and the clause types that matter most are often the rarest. I framed clause extraction as question answering on the CUAD benchmark and ran a controlled comparison of three architecture families on an identical, stratified test split of 4,180 items.</p>
+
+              <p>Fine-tuning beat zero-shot prompting by a wide margin, and the generative encoder-decoder model beat the purely extractive one, which was the less obvious result.</p>
+            </div>
+
+            <div class="glass-effect rounded-lg p-4 md:p-6 my-8 max-w-3xl overflow-x-auto">
+              <table class="results-table">
+                <caption class="sr-only">Model results on the CUAD test split, scored with SQuAD-style Exact Match and F1</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Model</th>
+                    <th scope="col">Architecture</th>
+                    <th scope="col">EM</th>
+                    <th scope="col">F1</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight">
+                    <td>FLAN-T5</td>
+                    <td>Encoder-decoder, fine-tuned</td>
+                    <td>73.44%</td>
+                    <td>75.91%</td>
+                  </tr>
+                  <tr>
+                    <td>LEGAL-BERT</td>
+                    <td>Encoder-only, fine-tuned</td>
+                    <td>69.40%</td>
+                    <td>70.74%</td>
+                  </tr>
+                  <tr>
+                    <td>Gemini 2.5 Pro</td>
+                    <td>Decoder-only, zero-shot</td>
+                    <td>57.66%</td>
+                    <td>67.98%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="space-y-4 text-gray-300 max-w-3xl">
+              <p>The diagnostic analysis was where it got interesting. Both fine-tuned models correctly identified absent clauses over 96% of the time, but paid for that precision with a higher false negative rate. LEGAL-BERT, which can only predict one contiguous span, is structurally handicapped on multi-span answers like a list of parties. And F1 tracks clause frequency closely, so rare clause types with fewer than 50 training examples remain the dominant source of error.</p>
+
+              <p>The conclusion I drew then is the one I still build on: zero-shot LLMs are a powerful baseline, but their variance and format drift make them unreliable for production systems where auditable, exact accuracy is non-negotiable.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4 mt-8">
+              <a href="/assets/Dissertation_Paper.pdf" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold">Read the full paper</a>
+              <button class="view-research-btn border border-blue-500 text-blue-400 px-5 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors font-semibold"
+                      data-title="Dissertation Presentation &amp; Summary"
+                      data-video="https://www.youtube.com/embed/o_WR2F6L9qc"
+                      data-description="A walkthrough of the methodology, results and diagnostic analysis behind the comparison of encoder-only, encoder-decoder and zero-shot decoder-only transformers on legal clause extraction.">
+                Watch the presentation
+              </button>
+            </div>
           </div>
 
-          <div class="glass-effect p-2 rounded-lg">
-            <iframe src="/assets/Dissertation_Paper.pdf" class="w-full h-[900px] rounded-md research-media" title="Dissertation PDF"></iframe>
+          <div class="glass-effect p-2 rounded-lg hidden md:block">
+            <iframe src="/assets/Dissertation_Paper.pdf" class="w-full h-[900px] rounded-md research-media" title="Dissertation PDF" loading="lazy"></iframe>
           </div>
         </div>
       </section>
@@ -338,34 +502,48 @@
       <!-- Skills -->
       <section id="skills" class="py-20 md:py-32">
         <h2 class="section-title">Technical Skills</h2>
-        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Programming</h3>
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Languages</h3>
             <ul class="space-y-2 text-gray-300">
               <li>Python</li>
-              <li>SQL</li>
-              <li>JavaScript</li>
               <li>TypeScript</li>
+              <li>JavaScript</li>
+              <li>Dart</li>
+              <li>SQL</li>
             </ul>
           </div>
           <div>
-            <h3 class="text-xl font-bold text-green-400 mb-4">AI & LLM Systems</h3>
+            <h3 class="text-xl font-bold text-amber-400 mb-4">Backend &amp; Data</h3>
+            <ul class="space-y-2 text-gray-300">
+              <li>PostgreSQL</li>
+              <li>Row-Level Security</li>
+              <li>JSONB &amp; pgvector</li>
+              <li>NestJS</li>
+              <li>FastAPI</li>
+              <li>Supabase</li>
+              <li>Node.js</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-teal-400 mb-4">Frontend &amp; Mobile</h3>
+            <ul class="space-y-2 text-gray-300">
+              <li>Next.js</li>
+              <li>React</li>
+              <li>Flutter</li>
+              <li>Riverpod</li>
+              <li>Tailwind CSS</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-green-400 mb-4">AI &amp; Infrastructure</h3>
             <ul class="space-y-2 text-gray-300">
               <li>Large Language Models</li>
-              <li>Retrieval-Augmented Generation (RAG)</li>
-              <li>Fine-tuning & Evaluation</li>
-              <li>Embeddings, Vector Search (pgvector)</li>
-              <li>PyTorch & Hugging Face</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold text-amber-400 mb-4">Backend & Tools</h3>
-            <ul class="space-y-2 text-gray-300">
-              <li>FastAPI</li>
-              <li>PostgreSQL + pgvector</li>
-              <li>Docker</li>
-              <li>Git & CI</li>
-              <li>Linux</li>
+              <li>Retrieval-Augmented Generation</li>
+              <li>Fine-tuning &amp; Evaluation</li>
+              <li>On-Device Inference (LiteRT-LM)</li>
+              <li>PyTorch &amp; Hugging Face</li>
+              <li>AWS, Docker, Linux</li>
             </ul>
           </div>
         </div>
@@ -375,28 +553,29 @@
     <!-- Footer -->
     <footer class="bg-black bg-opacity-20 border-t border-gray-800">
       <div class="container mx-auto px-6 py-8 text-center text-gray-400">
-        <div class="flex justify-center space-x-6 mb-4">
+        <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
           <a href="https://linkedin.com/in/amanjaiswal2107" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">LinkedIn</a>
           <a href="https://github.com/Aman-2107" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">GitHub</a>
+          <a href="mailto:aman2107jaiswal@gmail.com" class="hover:text-blue-400 transition-colors">Email</a>
           <a href="/assets/Aman_Jaiswal_CV.pdf" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">Download CV</a>
         </div>
-        <p>&copy; 2026 Aman Jaiswal. Built with passion and code.</p>
+        <p class="text-sm">&copy; 2026 Aman Jaiswal · London, UK</p>
       </div>
     </footer>
   </div>
 
-  <!-- Project Modal (shared for projects & research) -->
+  <!-- Shared modal for projects and research -->
   <div id="project-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
     <div class="modal-content glass-effect p-8 relative" role="document">
       <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl" aria-label="Close modal">&times;</button>
       <div class="grid md:grid-cols-2 gap-8 items-center">
-        <div id="modal-media-container" class="relative rounded-lg w-full bg-black flex items-center justify-center">
+        <div id="modal-media-container" class="relative rounded-lg w-full bg-black flex items-center justify-center min-h-[12rem]">
           <div id="video-loader" class="absolute w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
-          <iframe id="modal-video" class="rounded-lg w-full aspect-video opacity-0 transition-opacity duration-300" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <!-- Media element is injected here at runtime: <video> for local files, <iframe> for YouTube -->
         </div>
         <div>
-          <h3 id="modal-title" class="text-2xl font-bold mb-3"></h3>
-          <p id="modal-description" class="mb-4 text-gray-300"></p>
+          <h3 id="modal-title" class="text-2xl font-bold mb-3 text-gray-100"></h3>
+          <p id="modal-description" class="mb-4 text-gray-300 text-base"></p>
           <div id="modal-tech-stack" class="flex flex-wrap gap-2 mb-6"></div>
           <div class="flex items-center space-x-4 mt-6">
             <a id="modal-repo-link" href="#" target="_blank" rel="noopener noreferrer" class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-600 transition-colors font-semibold">GitHub Repo</a>
@@ -406,157 +585,197 @@
     </div>
   </div>
 
-  <!-- Main scripts: behavior & background rendering -->
   <script>
-    /* ---------------- Mobile menu toggle ---------------- */
+    /* ---------------- Mobile menu ---------------- */
     (function () {
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-      if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-          const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-          mobileMenuButton.setAttribute('aria-expanded', (!expanded).toString());
-          mobileMenu.classList.toggle('hidden');
+      const btn = document.getElementById('mobile-menu-button');
+      const menu = document.getElementById('mobile-menu');
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        menu.classList.toggle('hidden');
+      });
+
+      // Close the menu after tapping a link
+      menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
         });
-      }
+      });
     })();
 
-    /* ---------------- Typewriter / hero reveal ---------------- */
+    /* ---------------- Hero typewriter ---------------- */
     (function () {
-      const typewriterElement = document.getElementById('typewriter');
-      const linksContainer = document.getElementById('links-container');
-      const text = "AI/ML Engineer";
-      let idx = 0;
+      const el = document.getElementById('typewriter');
+      const links = document.getElementById('links-container');
+      const text = "Founding Engineer";
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      function type() {
-        if (!typewriterElement) return;
+      function reveal() {
+        links?.classList.remove('opacity-0');
+        links?.setAttribute('aria-hidden', 'false');
+      }
+
+      function type(idx) {
+        if (!el) return;
         if (idx < text.length) {
-          typewriterElement.textContent += text.charAt(idx++);
-          setTimeout(type, 100);
+          el.textContent += text.charAt(idx);
+          setTimeout(() => type(idx + 1), 100);
         } else {
-          linksContainer?.classList.remove('opacity-0');
-          linksContainer?.setAttribute('aria-hidden', 'false');
+          reveal();
         }
       }
 
+      function start() {
+        if (!el) return;
+        if (reduced) {
+          el.textContent = text;
+          reveal();
+          return;
+        }
+        setTimeout(() => type(0), 500);
+      }
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => setTimeout(type, 500));
+        document.addEventListener('DOMContentLoaded', start);
       } else {
-        setTimeout(type, 500);
+        start();
       }
     })();
 
-    /* ---------------- Modal behavior + focus management ---------------- */
+    /* ---------------- Modal ---------------- */
     (function () {
       const modal = document.getElementById('project-modal');
-      const modalCloseBtn = document.getElementById('modal-close-btn');
-      let modalVideo = document.getElementById('modal-video'); // let because we will replace/reassign it
-      const modalTitle = document.getElementById('modal-title');
-      const modalDesc = document.getElementById('modal-description');
-      const modalTech = document.getElementById('modal-tech-stack');
-      const modalRepo = document.getElementById('modal-repo-link');
+      const closeBtn = document.getElementById('modal-close-btn');
+      const mediaContainer = document.getElementById('modal-media-container');
+      const loader = document.getElementById('video-loader');
+      const titleEl = document.getElementById('modal-title');
+      const descEl = document.getElementById('modal-description');
+      const techEl = document.getElementById('modal-tech-stack');
+      const repoEl = document.getElementById('modal-repo-link');
 
       let lastFocus = null;
+
+      function clearMedia() {
+        mediaContainer.querySelectorAll('video, iframe').forEach(n => {
+          if (n.tagName === 'VIDEO') { try { n.pause(); } catch (e) {} }
+          n.remove();
+        });
+        if (loader) loader.style.display = 'none';
+      }
+
+      // Local files get a real <video>; YouTube and other embeds get an <iframe>.
+      // The old code put .mp4 files in an iframe with YouTube query params, which
+      // never autoplayed and rendered inconsistently across browsers.
+      function setMedia(src) {
+        clearMedia();
+        if (!src) return;
+
+        const isEmbed = /^https?:\/\//i.test(src) && !/\.(mp4|webm|ogg)(\?|$)/i.test(src);
+
+        if (loader) loader.style.display = 'block';
+
+        let node;
+        if (isEmbed) {
+          node = document.createElement('iframe');
+          node.className = 'rounded-lg w-full aspect-video opacity-0 transition-opacity duration-300';
+          node.setAttribute('frameborder', '0');
+          node.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+          node.setAttribute('allowfullscreen', '');
+          node.src = src + (src.indexOf('?') === -1 ? '?' : '&') + 'autoplay=1&rel=0&modestbranding=1';
+        } else {
+          node = document.createElement('video');
+          node.className = 'rounded-lg w-full opacity-0 transition-opacity duration-300';
+          node.controls = true;
+          node.autoplay = true;
+          node.muted = true;      // required for autoplay to be allowed
+          node.playsInline = true;
+          node.preload = 'metadata';
+          node.src = src;
+        }
+
+        function show() {
+          if (loader) loader.style.display = 'none';
+          node.style.opacity = '1';
+        }
+        node.addEventListener('loadeddata', show);
+        node.addEventListener('load', show);
+        node.addEventListener('error', () => {
+          if (loader) loader.style.display = 'none';
+          mediaContainer.innerHTML = '<p class="text-gray-500 text-base p-6 text-center">Demo video unavailable.</p>';
+        });
+        // Fallback in case neither event fires (cross-origin iframes often don't)
+        setTimeout(show, 2500);
+
+        mediaContainer.appendChild(node);
+      }
 
       function openModal() {
         lastFocus = document.activeElement;
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
-        modalCloseBtn?.focus();
+        closeBtn?.focus();
       }
 
       function closeModal() {
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
-
-        const loader = document.getElementById('video-loader');
-        if (loader) loader.style.display = 'none';
-
-        if (modalVideo && modalVideo.parentNode) {
-          const newIframe = modalVideo.cloneNode(false);
-          modalVideo.parentNode.replaceChild(newIframe, modalVideo);
-          modalVideo = newIframe; // reassign to the fresh element
-        }
-
+        clearMedia();
         if (lastFocus) lastFocus.focus();
       }
 
-      modalCloseBtn?.addEventListener('click', closeModal);
+      function renderTech(str) {
+        techEl.innerHTML = '';
+        if (!str) return;
+        str.split(',').forEach(t => {
+          const span = document.createElement('span');
+          span.className = 'bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm';
+          span.textContent = t.trim();
+          techEl.appendChild(span);
+        });
+      }
+
+      closeBtn?.addEventListener('click', closeModal);
       modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
       });
 
-      // Project buttons: populate modal and open
       document.querySelectorAll('.view-details-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const data = btn.dataset;
-          modalTitle.textContent = data.title || '';
-          modalDesc.textContent = data.description || '';
-
-          // lazy-load and autoplay iframe, with loader & fade
-          if (modalVideo && data.video) {
-            const loader = document.getElementById('video-loader');
-            try { modalVideo.style.opacity = '0'; } catch (e) {}
-            if (loader) loader.style.display = 'block';
-
-            // safe onload handler
-            modalVideo.onload = () => {
-              if (loader) loader.style.display = 'none';
-              try { modalVideo.style.opacity = '1'; } catch (e) {}
-            };
-
-            modalVideo.src = data.video + (data.video.indexOf('?') === -1 ? "?autoplay=1&rel=0&modestbranding=1" : "&autoplay=1&rel=0&modestbranding=1");
-          }
-
-          modalRepo.href = data.repoLink || '#';
-          modalRepo.style.display = (data.repoLink && data.repoLink !== '#') ? 'inline-block' : 'none';
-
-          modalTech.innerHTML = '';
-          if (data.tech) {
-            data.tech.split(',').forEach(t => {
-              const span = document.createElement('span');
-              span.className = 'bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm';
-              span.textContent = t.trim();
-              modalTech.appendChild(span);
-            });
-          }
+          const d = btn.dataset;
+          titleEl.textContent = d.title || '';
+          descEl.textContent = d.description || '';
+          renderTech(d.tech);
+          setMedia(d.video);
+          repoEl.href = d.repoLink || '#';
+          repoEl.style.display = (d.repoLink && d.repoLink !== '#') ? 'inline-block' : 'none';
           openModal();
         });
       });
 
-      // Research buttons: use the shared modal
       document.querySelectorAll('.view-research-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          modalTitle.textContent = btn.dataset.title || '';
-          modalDesc.textContent = btn.dataset.description || '';
-
-          if (modalVideo && btn.dataset.video) {
-            const loader = document.getElementById('video-loader');
-            try { modalVideo.style.opacity = '0'; } catch (e) {}
-            if (loader) loader.style.display = 'block';
-
-            modalVideo.onload = () => {
-              if (loader) loader.style.display = 'none';
-              try { modalVideo.style.opacity = '1'; } catch (e) {}
-            };
-
-            modalVideo.src = btn.dataset.video + (btn.dataset.video.indexOf('?') === -1 ? "?autoplay=1&rel=0&modestbranding=1" : "&autoplay=1&rel=0&modestbranding=1");
-          }
-
-          modalTech.innerHTML = '';
-          modalRepo.style.display = 'none';
+          const d = btn.dataset;
+          titleEl.textContent = d.title || '';
+          descEl.textContent = d.description || '';
+          renderTech('');
+          setMedia(d.video);
+          repoEl.style.display = 'none';
           openModal();
         });
       });
     })();
 
-    /* ---------------- Three.js neural background ---------------- */
+    /* ---------------- Three.js background ---------------- */
     (function () {
-      // Ensure THREE is available
       if (typeof THREE === 'undefined') return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       let scene, camera, renderer, points, lines;
       let mouseX = 0, mouseY = 0;
@@ -582,7 +801,6 @@
         points = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x888888, size: 3 }));
         scene.add(points);
 
-        // Build connections between nearby points (simple O(n^2) approach)
         const linePositions = [];
         const threshold = 170;
         for (let i = 0; i < particles; i++) {
@@ -606,7 +824,7 @@
         scene.add(lines);
 
         renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true });
-        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.addEventListener('mousemove', (e) => {
@@ -622,7 +840,7 @@
         windowHalfY = window.innerHeight / 2;
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
       }
 
