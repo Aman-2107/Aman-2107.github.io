@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>Aman Jaiswal — Founding Engineer</title>
-  <meta name="description" content="Founding Engineer at Blocvue. I build AI into domains where being wrong is expensive, and enforce correctness at the data layer rather than in application code." />
+  <meta name="description" content="Founding Engineer at Blocvue, governance and compliance management software for UK higher-risk residential buildings. Creator of BillSync. MSc Artificial Intelligence, Distinction, QMUL." />
 
   <!-- Open Graph / social preview. Controls how this page looks when shared on
        LinkedIn, Slack, WhatsApp etc. Replace og-image.png with a 1200x630 image. -->
@@ -227,7 +227,7 @@
             </h1>
 
             <p class="text-gray-400 text-base md:text-xl max-w-2xl font-sans leading-relaxed">
-              I build AI into domains where being wrong is expensive.
+              I build things I find interesting.
             </p>
 
             <div id="links-container" class="opacity-0 transition-opacity duration-700 mt-8 flex items-center space-x-6" aria-hidden="true">
@@ -250,7 +250,7 @@
         <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-12 items-center">
           <div class="md:col-span-2 space-y-4">
             <h2 class="text-3xl font-bold text-gray-100">About Me</h2>
-            <p class="text-gray-300">I'm a Founding Engineer at Blocvue, a compliance platform for UK higher-risk residential buildings, where a missed statutory deadline can be a criminal offence rather than a support ticket. I work across Next.js, NestJS and PostgreSQL on AWS.</p>
+            <p class="text-gray-300">I'm a Founding Engineer at Blocvue, governance and compliance management software for RTM boards, RMCs, freeholders and managing agents responsible for UK higher-risk residential buildings. Working in a small team, I migrated the platform from prototype to production on AWS, and I build across Next.js, NestJS and PostgreSQL.</p>
             <p class="text-gray-400">Before that I took a Distinction in MSc Artificial Intelligence at Queen Mary University of London. My dissertation concluded that zero-shot language models are too unreliable for systems where auditable accuracy is non-negotiable. I've spent the time since building systems that take that seriously.</p>
             <p class="text-gray-400">The same pattern runs through everything here: correctness enforced at the data layer rather than in application code, AI that cites its sources and asks before it acts, and privacy handled by architecture rather than policy.</p>
           </div>
@@ -275,16 +275,18 @@
               <h3 class="text-2xl font-bold text-blue-400">Founding Engineer — Blocvue</h3>
               <span class="font-fira text-sm text-gray-500">Aug 2026 – Present</span>
             </div>
-            <p class="text-gray-500 text-base mb-6 font-fira">Compliance platform for UK higher-risk residential buildings · Live since September 2026</p>
+            <p class="text-gray-500 text-base mb-6 font-fira">Governance &amp; compliance management software for UK higher-risk residential buildings · Live since September 2026</p>
 
             <div class="space-y-4 text-gray-300">
-              <p>Blocvue is a multi-tenant compliance platform for UK higher-risk residential buildings, a domain where a missed statutory deadline can be a criminal offence rather than a support ticket. I work on full-stack delivery and platform operations across Next.js, NestJS and PostgreSQL on AWS.</p>
+              <p>Blocvue is governance and compliance management software for RTM boards, RMCs, freeholders and managing agents responsible for UK higher-risk residential buildings, where a missed statutory deadline can be a criminal offence for the duty holder rather than a support ticket.</p>
+
+              <p>Working in a small team, I migrated the platform from prototype to production on AWS: account structure, networking, PostgreSQL, storage, backups and separation across development, staging and production. Day to day I work on full-stack delivery and platform operations across Next.js, NestJS and PostgreSQL.</p>
 
               <p>The tenancy model keeps row-level security as the enforcement boundary rather than application code. Across 100+ tables, every client's data is isolated at the database, not by a check somewhere in the API layer that someone can forget to write. The platform is designed to scale to 3,000 buildings.</p>
 
-              <p>An applicability engine maps 55 statutory duties across four legal frameworks onto individual buildings, so each building shows the obligations that actually apply to it. A versioned document layer holds the golden thread, a statutory record in which nothing can be silently replaced.</p>
+              <p>I built the applicability engine that maps 55 statutory duties across four legal frameworks onto individual buildings from client-maintained building data, and the versioned document layer that holds the client's golden thread, a statutory record in which nothing can be silently replaced.</p>
 
-              <p>Built the platform's regulatory-change monitor: an AI layer that watches legislation.gov.uk and regulator guidance for changes to statutory obligations, maps each change against the platform's obligation register, and reports what needs to move. Every flag is cited to source and nothing is applied without human sign-off. In a domain where a confident wrong answer has legal consequences, the design is verification and provenance first.</p>
+              <p>I also built the platform's regulatory-change monitor: an AI layer that watches legislation.gov.uk and regulator guidance for changes to statutory obligations, maps each change against the platform's obligation register, and surfaces what may need to move for the client's review. Every flag is cited to source and dated, and nothing is applied to a client's register without their sign-off. Blocvue gives duty holders the system of record; the compliance decisions stay theirs.</p>
             </div>
 
             <div class="flex flex-wrap gap-2 mt-6">
@@ -381,7 +383,7 @@
           <!-- Calma -->
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div class="rounded-lg overflow-hidden shadow-2xl md:order-2 glass-effect p-1">
-              <img src="/assets/calma-thumb.png" alt="Calma emotional support system screenshot" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
+              <img src="https://placehold.co/800x600/10b981/ffffff?text=CALMA-AI" alt="Calma emotional support system" class="w-full project-image transition-transform duration-300 rounded-md object-cover" loading="lazy">
             </div>
             <div class="md:order-1">
               <h3 class="text-2xl font-bold mb-3 text-green-400">Calma: Offline Emotional Support System</h3>
