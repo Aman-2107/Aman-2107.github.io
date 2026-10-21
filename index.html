@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>Aman Jaiswal — Founding Engineer</title>
-  <meta name="description" content="Founding Engineer at Blocvue, governance and compliance management software for UK higher-risk residential buildings. Creator of BillSync. MSc Artificial Intelligence, Distinction, QMUL." />
+  <meta name="description" content="Founding Engineer at Blocvue, governance and compliance management software for UK higher-risk residential buildings. Creator of Duefree. MSc Artificial Intelligence, Distinction, QMUL." />
 
   <!-- Open Graph / social preview. Controls how this page looks when shared on
        LinkedIn, Slack, WhatsApp etc. Replace og-image.png with a 1200x630 image. -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://amanjaiswal.co.uk/" />
   <meta property="og:title" content="Aman Jaiswal — Founding Engineer" />
-  <meta property="og:description" content="Founding Engineer at Blocvue. Creator of BillSync. MSc Artificial Intelligence, Distinction, QMUL." />
+  <meta property="og:description" content="Founding Engineer at Blocvue. Creator of Duefree. MSc Artificial Intelligence, Distinction, QMUL." />
   <meta property="og:image" content="https://amanjaiswal.co.uk/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/assets/favicon.png" />
@@ -149,6 +149,67 @@
       display: block;
     }
 
+    /* Duefree card: colours from the Duefree brand (mint #2FE0C2, on-mint #04211D,
+       raised ink #0B1626, hairline #213A52). */
+    .df-accent { color: #2FE0C2; }
+    .df-icon {
+      width: 56px;
+      height: 56px;
+      flex: none;
+      border-radius: 22%;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+    }
+    .df-panel {
+      background: rgba(11,22,38,0.7);
+      border: 1px solid #213A52;
+    }
+    .df-list li { padding-left: 1.1rem; position: relative; }
+    .df-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 6px;
+      height: 6px;
+      border-radius: 2px;
+      background: #2FE0C2;
+    }
+    /* Phones: a row that scrolls sideways. Wider: three, then six columns. */
+    .df-gallery {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 6px 6px 0.5rem;
+      margin-inline: -6px;
+      scroll-padding-inline: 6px;
+    }
+    .df-gallery figure { flex: 0 0 60%; scroll-snap-align: start; }
+    @media (min-width: 400px) {
+      .df-gallery figure { flex-basis: 40%; }
+    }
+    @media (min-width: 640px) {
+      .df-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; padding: 0; margin-inline: 0; }
+    }
+    @media (min-width: 1024px) {
+      .df-gallery { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    }
+    .df-gallery img { height: auto; }
+    .df-shot-link { display: block; border-radius: 1rem; }
+    .df-shot-link .phone-shot { transition: border-color 0.2s ease; }
+    .df-shot-link:hover .phone-shot { border-color: rgba(47,224,194,0.6); }
+    .df-caption {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+    .df-btn { background: #2FE0C2; color: #04211D; }
+    .df-btn:hover { background: #9FF2E2; }
+    .df-btn-outline { border: 1px solid #2FE0C2; color: #2FE0C2; }
+    .df-btn-outline:hover { background: #2FE0C2; color: #04211D; }
+
     .results-table {
       width: 100%;
       border-collapse: collapse;
@@ -280,12 +341,12 @@
         <div class="max-w-5xl mx-auto space-y-12">
 
           <!-- Blocvue -->
-          <article class="glass-effect rounded-lg p-8">
+          <article class="glass-effect rounded-lg p-5 sm:p-8">
             <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
               <h3 class="text-2xl font-bold text-blue-400">Founding Engineer — Blocvue</h3>
-              <span class="font-fira text-sm text-gray-500">Aug 2026 – Present</span>
+              <span class="font-fira text-sm text-gray-400">Aug 2026 – Present</span>
             </div>
-            <p class="text-gray-500 text-base mb-6 font-fira">Governance &amp; compliance management software for UK higher-risk residential buildings · Live since September 2026</p>
+            <p class="text-gray-400 text-base mb-6 font-fira">Governance &amp; compliance management software for UK higher-risk residential buildings · Live since September 2026</p>
 
             <div class="space-y-4 text-gray-300">
               <p>Blocvue is governance and compliance management software for RTM boards, RMCs, freeholders and managing agents responsible for UK higher-risk residential buildings, where a missed statutory deadline can be a criminal offence for the duty holder rather than a support ticket.</p>
@@ -310,45 +371,100 @@
             </div>
           </article>
 
-          <!-- BillSync -->
-          <article class="glass-effect rounded-lg p-8">
-            <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-              <h3 class="text-2xl font-bold text-teal-400">Founder &amp; Solo Developer — BillSync</h3>
-              <span class="font-fira text-sm text-gray-500">Apr 2026 – Present</span>
+          <!-- Duefree. Screenshots, alt text and icon are copied unchanged from the press kit
+               (Duefree repo, website/assets/press and website/assets/brand). -->
+          <article class="glass-effect rounded-lg p-5 sm:p-8">
+            <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-1">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 min-w-0">
+                <img src="/assets/duefree/duefree-icon-1024.png" width="56" height="56" class="df-icon" alt="">
+                <h3 class="text-2xl font-bold df-accent">Founder &amp; Solo Developer — Duefree</h3>
+              </div>
+              <span class="font-fira text-sm text-gray-400">Apr 2026 – Present</span>
             </div>
-            <p class="text-gray-500 text-base mb-6 font-fira">Personal finance tracker and bill splitter · Android and iOS</p>
+            <p class="text-gray-400 text-base mt-3 mb-6 font-fira">Spending tracker and bill splitter · Android and iPhone · Coming soon to Google&nbsp;Play and the App&nbsp;Store</p>
 
             <div class="grid lg:grid-cols-5 gap-8 items-start">
               <div class="lg:col-span-3 space-y-4 text-gray-300">
-                <p>BillSync is a personal finance tracker and a social bill-splitter in one app. You track your own spending and budgets, and split bills with friends and groups, without switching between two apps. I designed, built and shipped it solo: product, backend, mobile client and store releases.</p>
+                <p>Duefree is a spending tracker and a bill splitter in one app, for people who share costs every week: housemates, couples and friends. You log your own spending in one line, set monthly budgets and see where the money went, then split bills one to one or in a group, with one balance for each friend and each group. It keeps the record of who paid and who has settled up, and never moves money itself. I'm building it on my own, end to end: product, Flutter app, Supabase backend, brand, website and store releases.</p>
 
-                <p>Its assistant runs Google's Gemma 4 (E2B, LiteRT-LM, roughly 2.6&nbsp;GB) entirely on the phone. It can log an expense, split a bill or settle up, and every one of those is shown for confirmation before it runs. No question about your money leaves the device. There is no server-side AI, no model provider ever receives your finances, and there is no analytics or crash-reporting SDK in the app.</p>
+                <p>Duefree AI, part of the optional Duefree Plus subscription, runs Google's Gemma 4 (E2B, LiteRT-LM, about 2.6&nbsp;GB) entirely on the phone. It briefs you on your month, answers questions from your own numbers, reads receipts from a photo on phones that support it, and logs or splits an entry only after you confirm it. The app computes every figure; the model handles language, photos and proposed actions. Your questions never go to an AI server and receipt photos are never uploaded. On-device testing showed tool-call success collapsing as arguments were added, from 87&ndash;100% with one to 0% with four, so no tool takes more than two and the app derives the rest.</p>
 
-                <p>Money is computed in the database in exact decimal, never in floating point on the client. Shares round to the smallest unit of the currency and any rounding remainder goes to the person who paid, so a bill's shares always add up to the bill, and a balance that reads zero is zero.</p>
-
-                <div class="flex flex-wrap gap-2 pt-2">
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Flutter</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Dart 3</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Riverpod</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Supabase</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Gemma 4</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LiteRT-LM</span>
-                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">On-Device Inference</span>
-                </div>
-
-                <!-- TODO: replace both hrefs with the real store listings once live -->
-                <div class="flex flex-wrap items-center gap-4 pt-4">
-                  <a href="PLAY_STORE_URL" target="_blank" rel="noopener noreferrer" class="bg-teal-600 text-white px-5 py-2 rounded-lg hover:bg-teal-700 transition-colors font-semibold">Get it on Google Play</a>
-                  <a href="APP_STORE_URL" target="_blank" rel="noopener noreferrer" class="border border-teal-500 text-teal-400 px-5 py-2 rounded-lg hover:bg-teal-500 hover:text-white transition-colors font-semibold">Download on the App Store</a>
-                </div>
+                <p>Money is stored in exact decimal and every split is checked on the server: shares are rounded to two decimal places and any remainder goes into the payer's own share, so a bill's shares always add up to the bill. Splits, settlements and group membership have no client write path at all: row-level security and table grants leave the app read-only on them, and every change goes through a <span class="font-fira text-gray-400">SECURITY DEFINER</span> function that checks the caller itself. Plus purchases are verified server-side with Google Play and the App Store, including signature checks against Apple's pinned root certificate, before anything is granted. There are no ads, no bank connection, and no analytics or crash-reporting SDK in the app.</p>
               </div>
 
-              <div class="lg:col-span-2 grid grid-cols-3 gap-3">
-                <img src="/assets/billsync-home.png" alt="BillSync home screen showing current balance and recent transactions" class="phone-shot" loading="lazy">
-                <img src="/assets/billsync-stats.png" alt="BillSync statistics screen showing spending by category" class="phone-shot" loading="lazy">
-                <img src="/assets/billsync-split.png" alt="BillSync split screen showing net position and groups" class="phone-shot" loading="lazy">
+              <div class="lg:col-span-2 df-panel rounded-lg p-6">
+                <h4 class="font-fira text-sm text-gray-400 mb-4">What it does</h4>
+                <ul class="df-list space-y-3 text-gray-300 text-base">
+                  <li><strong class="text-gray-100">Log it in one line.</strong> Type &ldquo;Coffee 4.50&rdquo; and the form opens filled in, with a category suggested.</li>
+                  <li><strong class="text-gray-100">Split to the penny.</strong> Equally or by exact amounts, one to one or in a group.</li>
+                  <li><strong class="text-gray-100">Not mine.</strong> Anyone put on a bill that isn't theirs can decline their share, and the payer is told.</li>
+                  <li><strong class="text-gray-100">Settle up and remind.</strong> Record a payment, or send a reminder in a gentle or direct tone.</li>
+                  <li><strong class="text-gray-100">Budgets and stats.</strong> Monthly limits that show your pace, and spending from a week to all time.</li>
+                  <li><strong class="text-gray-100">Duefree Plus.</strong> Duefree AI and premium themes, billed through Google Play or the App Store.</li>
+                </ul>
               </div>
+            </div>
+
+            <div class="df-gallery mt-10">
+              <figure>
+                <a href="/assets/duefree/duefree-home.png" target="_blank" rel="noopener noreferrer" class="df-shot-link">
+                  <img src="/assets/duefree/duefree-home-thumb.webp" width="390" height="844" loading="lazy" decoding="async" class="phone-shot" alt="Duefree’s Home tab: Maya’s card, an insight line saying £214.02 spent so far, £57.06 less than by this day in September, and today’s entries from Tesco and Pret A Manger.">
+                </a>
+                <figcaption class="df-caption">Home</figcaption>
+              </figure>
+              <figure>
+                <a href="/assets/duefree/duefree-quick-capture.png" target="_blank" rel="noopener noreferrer" class="df-shot-link">
+                  <img src="/assets/duefree/duefree-quick-capture-thumb.webp" width="390" height="844" loading="lazy" decoding="async" class="phone-shot" alt="Duefree’s Quick Capture sheet: “Coffee 4.50” typed in, ready to open the form as Coffee, £4.50, Food, above Expense, Income, Split and Scan, and three recent entries to log again.">
+                </a>
+                <figcaption class="df-caption">Quick Capture</figcaption>
+              </figure>
+              <figure>
+                <a href="/assets/duefree/duefree-split.png" target="_blank" rel="noopener noreferrer" class="df-shot-link">
+                  <img src="/assets/duefree/duefree-split-thumb.webp" width="390" height="844" loading="lazy" decoding="async" class="phone-shot" alt="Duefree’s Split tab: £36.50 owed to you by two people, £30.00 you owe to two people, and a balance with each friend below.">
+                </a>
+                <figcaption class="df-caption">Split</figcaption>
+              </figure>
+              <figure>
+                <a href="/assets/duefree/duefree-stats.png" target="_blank" rel="noopener noreferrer" class="df-shot-link">
+                  <img src="/assets/duefree/duefree-stats-thumb.webp" width="390" height="844" loading="lazy" decoding="async" class="phone-shot" alt="Duefree’s Stats tab for October: £214.02 spent so far against £556.73 in all of September, with an estimate of about £829 by the end of October at this pace, and Shopping leading at 38% of spending.">
+                </a>
+                <figcaption class="df-caption">Stats</figcaption>
+              </figure>
+              <figure>
+                <a href="/assets/duefree/duefree-ai.png" target="_blank" rel="noopener noreferrer" class="df-shot-link">
+                  <img src="/assets/duefree/duefree-ai-thumb.webp" width="390" height="844" loading="lazy" decoding="async" class="phone-shot" alt="Duefree AI opening on your brief for Thursday 8 October: £214.02 spent this month, £57.06 less than by this day in September, about £829 by 31 October at this pace, and Shopping on course to reach its £150.00 budget around 15 October.">
+                </a>
+                <figcaption class="df-caption">Duefree AI</figcaption>
+              </figure>
+              <figure>
+                <a href="/assets/duefree/duefree-profile.png" target="_blank" rel="noopener noreferrer" class="df-shot-link">
+                  <img src="/assets/duefree/duefree-profile-thumb.webp" width="390" height="844" loading="lazy" decoding="async" class="phone-shot" alt="Duefree’s Profile tab: Maya Patel’s card with her Plus Monthly plan, which renews on 14 Nov 2026, her balance, income and spending, and her colour, Midnight Mint.">
+                </a>
+                <figcaption class="df-caption">Profile</figcaption>
+              </figure>
+            </div>
+            <p class="text-gray-400 text-sm mt-3">Six screens from the app, shown with a demo account. Select one to open it full size.</p>
+
+            <div class="flex flex-wrap gap-2 mt-8">
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Flutter</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Dart 3</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Riverpod</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Supabase</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Row-Level Security</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Edge Functions (Deno)</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Firebase Cloud Messaging</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Gemma 4</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LiteRT-LM</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">On-Device Inference</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Google Play Billing</span>
+              <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">StoreKit 2</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4 mt-6">
+              <a href="https://duefree.co.uk/" target="_blank" rel="noopener noreferrer" class="df-btn px-5 py-2 rounded-lg transition-colors font-semibold text-center">Visit duefree.co.uk</a>
+              <a href="https://duefree.co.uk/press/" target="_blank" rel="noopener noreferrer" class="df-btn-outline px-5 py-2 rounded-lg transition-colors font-semibold text-center">Press kit</a>
+              <span class="font-fira text-sm text-gray-400">Track. Split. Settle.</span>
             </div>
           </article>
 
@@ -781,6 +897,18 @@
           repoEl.style.display = 'none';
           openModal();
         });
+      });
+    })();
+
+    /* ---------------- Duefree gallery ---------------- */
+    /* Chrome leaves a partly visible screenshot clipped when Tab focuses it. Keyboard focus
+       only: a tap also focuses the link, and scrolling then would swallow the tap. */
+    (function () {
+      const g = document.querySelector('.df-gallery');
+      g?.addEventListener('focusin', (e) => {
+        if (g.scrollWidth > g.clientWidth && e.target.matches(':focus-visible')) {
+          e.target.scrollIntoView({ block: 'nearest', inline: 'start' });
+        }
       });
     })();
 
