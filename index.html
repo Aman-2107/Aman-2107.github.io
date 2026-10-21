@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>Aman Jaiswal — Founding Engineer</title>
-  <meta name="description" content="Founding Engineer at Blocvue, governance and compliance management software for UK higher-risk residential buildings. Creator of BillSync. MSc Artificial Intelligence, Distinction, QMUL." />
+  <meta name="description" content="Founding Engineer at Blocvue, governance and compliance management software for UK higher-risk residential buildings. Creator of Duefree. MSc Artificial Intelligence, Distinction, QMUL." />
 
   <!-- Open Graph / social preview. Controls how this page looks when shared on
        LinkedIn, Slack, WhatsApp etc. Replace og-image.png with a 1200x630 image. -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://amanjaiswal.co.uk/" />
   <meta property="og:title" content="Aman Jaiswal — Founding Engineer" />
-  <meta property="og:description" content="Founding Engineer at Blocvue. Creator of BillSync. MSc Artificial Intelligence, Distinction, QMUL." />
+  <meta property="og:description" content="Founding Engineer at Blocvue. Creator of Duefree. MSc Artificial Intelligence, Distinction, QMUL." />
   <meta property="og:image" content="https://amanjaiswal.co.uk/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/assets/favicon.png" />
@@ -310,21 +310,21 @@
             </div>
           </article>
 
-          <!-- BillSync -->
+          <!-- Duefree -->
           <article class="glass-effect rounded-lg p-8">
             <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-              <h3 class="text-2xl font-bold text-teal-400">Founder &amp; Solo Developer — BillSync</h3>
+              <h3 class="text-2xl font-bold text-teal-400">Founder &amp; Solo Developer — Duefree</h3>
               <span class="font-fira text-sm text-gray-500">Apr 2026 – Present</span>
             </div>
-            <p class="text-gray-500 text-base mb-6 font-fira">Personal finance tracker and bill splitter · Android and iOS</p>
+            <p class="text-gray-500 text-base mb-6 font-fira">Split bills and track your spending, in one app · Android and iOS · Coming soon to Google Play and the App Store</p>
 
             <div class="grid lg:grid-cols-5 gap-8 items-start">
               <div class="lg:col-span-3 space-y-4 text-gray-300">
-                <p>BillSync is a personal finance tracker and a social bill-splitter in one app. You track your own spending and budgets, and split bills with friends and groups, without switching between two apps. I designed, built and shipped it solo: product, backend, mobile client and store releases.</p>
+                <p>Duefree is a personal finance tracker and a social bill-splitter in one app. You log your own spending in one line, see your month in stats, set budgets that keep pace, and split bills with housemates, partners and friends, with one balance for each friend and each group. Friends can say a bill isn&rsquo;t theirs, record that they&rsquo;ve settled up, and get a reminder in the tone you choose. I designed, built and am shipping it solo: product, backend, mobile client, brand, website and store releases.</p>
 
-                <p>Its assistant runs Google's Gemma 4 (E2B, LiteRT-LM, roughly 2.6&nbsp;GB) entirely on the phone. It can log an expense, split a bill or settle up, and every one of those is shown for confirmation before it runs. No question about your money leaves the device. There is no server-side AI, no model provider ever receives your finances, and there is no analytics or crash-reporting SDK in the app.</p>
+                <p>Duefree AI runs Google&rsquo;s Gemma 4 (E2B, LiteRT-LM, roughly 2.6&nbsp;GB) entirely on the phone. It briefs you on your month, answers questions from your own numbers, reads receipts from a photo, and logs or splits an entry once you&rsquo;ve checked it: every action is shown for confirmation before it runs. Your questions never go to an AI server and receipt photos are never uploaded. There are no ads, no bank connection, and no analytics or crash-reporting SDK in the app.</p>
 
-                <p>Money is computed in the database in exact decimal, never in floating point on the client. Shares round to the smallest unit of the currency and any rounding remainder goes to the person who paid, so a bill's shares always add up to the bill, and a balance that reads zero is zero.</p>
+                <p>Money is computed in the database in exact decimal, never in floating point on the client. Shares round to the smallest unit of the currency and any odd penny goes to the person who paid, so a bill&rsquo;s shares always add up to the bill, and a balance that reads zero is zero. Every ledger write goes through a <span class="font-fira text-gray-400">SECURITY DEFINER</span> RPC behind row-level security, and Duefree Plus subscriptions are verified server-side against both Google Play and the App Store.</p>
 
                 <div class="flex flex-wrap gap-2 pt-2">
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Flutter</span>
@@ -332,22 +332,26 @@
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Riverpod</span>
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Supabase</span>
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Row-Level Security</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Edge Functions</span>
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Gemma 4</span>
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">LiteRT-LM</span>
                   <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">On-Device Inference</span>
+                  <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">In-App Subscriptions</span>
                 </div>
 
-                <!-- TODO: replace both hrefs with the real store listings once live -->
+                <!-- TODO: add Google Play and App Store buttons once the listings are live -->
                 <div class="flex flex-wrap items-center gap-4 pt-4">
-                  <a href="PLAY_STORE_URL" target="_blank" rel="noopener noreferrer" class="bg-teal-600 text-white px-5 py-2 rounded-lg hover:bg-teal-700 transition-colors font-semibold">Get it on Google Play</a>
-                  <a href="APP_STORE_URL" target="_blank" rel="noopener noreferrer" class="border border-teal-500 text-teal-400 px-5 py-2 rounded-lg hover:bg-teal-500 hover:text-white transition-colors font-semibold">Download on the App Store</a>
+                  <a href="https://duefree.co.uk/" target="_blank" rel="noopener noreferrer" class="bg-teal-600 text-white px-5 py-2 rounded-lg hover:bg-teal-700 transition-colors font-semibold">Visit duefree.co.uk</a>
+                  <a href="https://duefree.co.uk/press/" target="_blank" rel="noopener noreferrer" class="border border-teal-500 text-teal-400 px-5 py-2 rounded-lg hover:bg-teal-500 hover:text-white transition-colors font-semibold">Press kit</a>
+                  <span class="font-fira text-sm text-gray-500">Track. Split. Settle.</span>
                 </div>
               </div>
 
               <div class="lg:col-span-2 grid grid-cols-3 gap-3">
-                <img src="/assets/billsync-home.png" alt="BillSync home screen showing current balance and recent transactions" class="phone-shot" loading="lazy">
-                <img src="/assets/billsync-stats.png" alt="BillSync statistics screen showing spending by category" class="phone-shot" loading="lazy">
-                <img src="/assets/billsync-split.png" alt="BillSync split screen showing net position and groups" class="phone-shot" loading="lazy">
+                <img src="/assets/duefree-home.png" alt="Duefree home screen showing this month's spending insight and recent transactions" class="phone-shot" width="780" height="1688" loading="lazy">
+                <img src="/assets/duefree-split.png" alt="Duefree split screen showing the net balance with friends and groups" class="phone-shot" width="780" height="1688" loading="lazy">
+                <img src="/assets/duefree-ai.png" alt="Duefree AI screen showing the on-device assistant's brief of the month" class="phone-shot" width="780" height="1688" loading="lazy">
               </div>
             </div>
           </article>
