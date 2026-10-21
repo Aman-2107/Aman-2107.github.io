@@ -180,19 +180,24 @@
       gap: 1rem;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      padding-bottom: 0.5rem;
+      padding: 6px 6px 0.5rem;
+      margin-inline: -6px;
+      scroll-padding-inline: 6px;
     }
-    .df-gallery figure { flex: 0 0 40%; scroll-snap-align: start; }
+    .df-gallery figure { flex: 0 0 60%; scroll-snap-align: start; }
+    @media (min-width: 400px) {
+      .df-gallery figure { flex-basis: 40%; }
+    }
     @media (min-width: 640px) {
-      .df-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; padding-bottom: 0; }
+      .df-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; padding: 0; margin-inline: 0; }
     }
     @media (min-width: 1024px) {
       .df-gallery { grid-template-columns: repeat(6, minmax(0, 1fr)); }
     }
     .df-gallery img { height: auto; }
     .df-shot-link { display: block; border-radius: 1rem; }
-    .df-shot-link .phone-shot { transition: transform 0.2s ease, border-color 0.2s ease; }
-    .df-shot-link:hover .phone-shot { transform: translateY(-3px); border-color: rgba(47,224,194,0.6); }
+    .df-shot-link .phone-shot { transition: border-color 0.2s ease; }
+    .df-shot-link:hover .phone-shot { border-color: rgba(47,224,194,0.6); }
     .df-caption {
       font-family: 'Fira Code', monospace;
       font-size: 0.8rem;
@@ -339,9 +344,9 @@
           <article class="glass-effect rounded-lg p-5 sm:p-8">
             <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
               <h3 class="text-2xl font-bold text-blue-400">Founding Engineer — Blocvue</h3>
-              <span class="font-fira text-sm text-gray-500">Aug 2026 – Present</span>
+              <span class="font-fira text-sm text-gray-400">Aug 2026 – Present</span>
             </div>
-            <p class="text-gray-500 text-base mb-6 font-fira">Governance &amp; compliance management software for UK higher-risk residential buildings · Live since September 2026</p>
+            <p class="text-gray-400 text-base mb-6 font-fira">Governance &amp; compliance management software for UK higher-risk residential buildings · Live since September 2026</p>
 
             <div class="space-y-4 text-gray-300">
               <p>Blocvue is governance and compliance management software for RTM boards, RMCs, freeholders and managing agents responsible for UK higher-risk residential buildings, where a missed statutory deadline can be a criminal offence for the duty holder rather than a support ticket.</p>
@@ -370,21 +375,21 @@
                (Duefree repo, website/assets/press and website/assets/brand). -->
           <article class="glass-effect rounded-lg p-5 sm:p-8">
             <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-1">
-              <div class="flex items-center gap-4">
-                <img src="/assets/duefree/duefree-icon-1024.png" width="56" height="56" class="df-icon" alt="Duefree app icon">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 min-w-0">
+                <img src="/assets/duefree/duefree-icon-1024.png" width="56" height="56" class="df-icon" alt="">
                 <h3 class="text-2xl font-bold df-accent">Founder &amp; Solo Developer — Duefree</h3>
               </div>
-              <span class="font-fira text-sm text-gray-500">Apr 2026 – Present</span>
+              <span class="font-fira text-sm text-gray-400">Apr 2026 – Present</span>
             </div>
-            <p class="text-gray-500 text-base mt-3 mb-6 font-fira">Spending tracker and bill splitter · Android and iPhone · Coming soon to Google Play and the App Store</p>
+            <p class="text-gray-400 text-base mt-3 mb-6 font-fira">Spending tracker and bill splitter · Android and iPhone · Coming soon to Google&nbsp;Play and the App&nbsp;Store</p>
 
             <div class="grid lg:grid-cols-5 gap-8 items-start">
               <div class="lg:col-span-3 space-y-4 text-gray-300">
                 <p>Duefree is a spending tracker and a bill splitter in one app, for people who share costs every week: housemates, couples and friends. You log your own spending in one line, set monthly budgets and see where the money went, then split bills one to one or in a group, with one balance for each friend and each group. It keeps the record of who paid and who has settled up, and never moves money itself. I'm building it on my own, end to end: product, Flutter app, Supabase backend, brand, website and store releases.</p>
 
-                <p>Duefree AI, part of the optional Duefree Plus subscription, runs Google's Gemma 4 (E2B, LiteRT-LM, about 2.6&nbsp;GB) entirely on the phone. It briefs you on your month, answers questions from your own numbers, reads receipts from a photo, and logs or splits an entry only after you confirm it. The app computes every figure; the model handles language, photos and proposed actions. Your questions never go to an AI server and receipt photos are never uploaded. On-device testing showed tool-call success collapsing as arguments were added, from 87&ndash;100% with one to 0% with four, so no tool takes more than two and the app derives the rest.</p>
+                <p>Duefree AI, part of the optional Duefree Plus subscription, runs Google's Gemma 4 (E2B, LiteRT-LM, about 2.6&nbsp;GB) entirely on the phone. It briefs you on your month, answers questions from your own numbers, reads receipts from a photo on phones that support it, and logs or splits an entry only after you confirm it. The app computes every figure; the model handles language, photos and proposed actions. Your questions never go to an AI server and receipt photos are never uploaded. On-device testing showed tool-call success collapsing as arguments were added, from 87&ndash;100% with one to 0% with four, so no tool takes more than two and the app derives the rest.</p>
 
-                <p>Money is stored in exact decimal and every split is checked on the server: shares are rounded to two decimal places and any remainder goes into the payer's own share, so a bill's shares always add up to the bill. Splits, settlements and group membership have no client write path at all; every change goes through a <span class="font-fira text-gray-400">SECURITY DEFINER</span> function behind row-level security. Plus purchases are verified server-side with Google Play and the App Store, including signature checks against Apple's pinned root certificate, before anything is granted. There are no ads, no bank connection, and no analytics or crash-reporting SDK in the app.</p>
+                <p>Money is stored in exact decimal and every split is checked on the server: shares are rounded to two decimal places and any remainder goes into the payer's own share, so a bill's shares always add up to the bill. Splits, settlements and group membership have no client write path at all: row-level security and table grants leave the app read-only on them, and every change goes through a <span class="font-fira text-gray-400">SECURITY DEFINER</span> function that checks the caller itself. Plus purchases are verified server-side with Google Play and the App Store, including signature checks against Apple's pinned root certificate, before anything is granted. There are no ads, no bank connection, and no analytics or crash-reporting SDK in the app.</p>
               </div>
 
               <div class="lg:col-span-2 df-panel rounded-lg p-6">
@@ -438,7 +443,7 @@
                 <figcaption class="df-caption">Profile</figcaption>
               </figure>
             </div>
-            <p class="text-gray-500 text-sm mt-3">Six screens from the app, shown with a demo account. Select one to open it full size.</p>
+            <p class="text-gray-400 text-sm mt-3">Six screens from the app, shown with a demo account. Select one to open it full size.</p>
 
             <div class="flex flex-wrap gap-2 mt-8">
               <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Flutter</span>
@@ -457,9 +462,9 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-4 mt-6">
-              <a href="https://duefree.co.uk/" target="_blank" rel="noopener noreferrer" class="df-btn px-5 py-2 rounded-lg transition-colors font-semibold">Visit duefree.co.uk</a>
-              <a href="https://duefree.co.uk/press/" target="_blank" rel="noopener noreferrer" class="df-btn-outline px-5 py-2 rounded-lg transition-colors font-semibold">Press kit</a>
-              <span class="font-fira text-sm text-gray-500">Track. Split. Settle.</span>
+              <a href="https://duefree.co.uk/" target="_blank" rel="noopener noreferrer" class="df-btn px-5 py-2 rounded-lg transition-colors font-semibold text-center">Visit duefree.co.uk</a>
+              <a href="https://duefree.co.uk/press/" target="_blank" rel="noopener noreferrer" class="df-btn-outline px-5 py-2 rounded-lg transition-colors font-semibold text-center">Press kit</a>
+              <span class="font-fira text-sm text-gray-400">Track. Split. Settle.</span>
             </div>
           </article>
 
@@ -892,6 +897,18 @@
           repoEl.style.display = 'none';
           openModal();
         });
+      });
+    })();
+
+    /* ---------------- Duefree gallery ---------------- */
+    /* Chrome leaves a partly visible screenshot clipped when Tab focuses it. Keyboard focus
+       only: a tap also focuses the link, and scrolling then would swallow the tap. */
+    (function () {
+      const g = document.querySelector('.df-gallery');
+      g?.addEventListener('focusin', (e) => {
+        if (g.scrollWidth > g.clientWidth && e.target.matches(':focus-visible')) {
+          e.target.scrollIntoView({ block: 'nearest', inline: 'start' });
+        }
       });
     })();
 
