@@ -1,0 +1,92 @@
+# Builds the site (compiling Tailwind) and deploys it to GitHub Pages.
+#
+# It deploys only once Settings -> Pages -> Build and deployment -> Source is "GitHub Actions".
+# Until then GitHub keeps publishing the branch as before, the page loads Tailwind from its CDN,
+# and this workflow only checks that the site builds.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; let a running deployment finish.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: read # to read the Pages source below
+    outputs:
+      deploy: ${{ steps.source.outputs.deploy }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # the sitemap's lastmod dates come from git history
+          persist-credentials: false
+
+      # Tailwind's standalone CLI, pinned by checksum. When changing the version, change it in
+      # .github/scripts/build-site.sh too, and take the new hash from the release's sha256sums.txt.
+      - name: Fetch the Tailwind CLI
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/tailwindcss" \
+            https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.19/tailwindcss-linux-x64
+          echo "4af3198c015616ea7d6617974ec3d70d987ecc00c1ca8463b0a30fd65cc7c06e  $RUNNER_TEMP/tailwindcss" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/tailwindcss"
+          echo "TAILWIND=$RUNNER_TEMP/tailwindcss" >> "$GITHUB_ENV"
+
+      - name: Build the site
+        run: bash .github/scripts/build-site.sh _site
+
+      - name: Check the Pages source
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          build_type=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq .build_type 2>/dev/null || echo unknown)
+          echo "Pages source: ${build_type}"
+          if [ "${build_type}" = "legacy" ]; then
+            echo "::notice::Pages still publishes from the branch, so this run does not deploy. Set Settings -> Pages -> Source to GitHub Actions to use this workflow."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload the site
+        if: steps.source.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

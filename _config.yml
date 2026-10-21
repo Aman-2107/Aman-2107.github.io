@@ -1,0 +1,6 @@
+# Only used while GitHub Pages builds this site from the branch (Jekyll). The GitHub Actions
+# deploy in .github/workflows/pages.yml does not use Jekyll and ignores this file.
+exclude:
+  - README.md
+  - tailwind.config.js
+  - tailwind.input.css
